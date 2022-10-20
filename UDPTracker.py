@@ -1,5 +1,12 @@
-from tracker import Tracker
+# from Exceptions import NotSupported
+import logging
+
+from Tracker import Tracker
 
 
 class UDPTracker(Tracker):
-    pass
+    def get_peers(self):
+        logging.getLogger('BitTorrent').error('No implementation to UDP tracker')
+        # raise NotSupported
+
+        return []
