@@ -1,3 +1,4 @@
+from typing import Dict
 from typing import List
 
 from Peer import Peer
@@ -8,10 +9,10 @@ class TrackerManager:
     def __init__(self, trackers: List[Tracker]):
         self.trackers: List[Tracker] = trackers
 
-    def get_peers(self, file_hash, peer_id) -> List[Peer]:
+    def get_peers(self, peer_id: bytes, port: int, info: Dict) -> List[Peer]:
         peers = []
         for tracker in self.trackers:
-            tracker_peers = tracker.get_peers(file_hash, peer_id)
+            tracker_peers = tracker.get_peers(peer_id, port, info)
             peers += tracker_peers
 
         return peers

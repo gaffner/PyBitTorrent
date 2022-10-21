@@ -1,21 +1,35 @@
+import hashlib
 import logging
+from typing import Dict
+from typing import List
+
 import requests
-from bcoding import bdecode
+from bcoding import bdecode, bencode
 
 from Peer import Peer
 from Tracker import Tracker
 
 
 class HTTPTracker(Tracker):
-    def get_peers(self):
+    def get_peers(self, peer_id: bytes, port: int, info: Dict) -> List[Peer]:
         logging.getLogger('BitTorrent').error(f'Connecting to HTTP Tracker {self.url}')
 
-        params = {'info_hash': b'\x8e\x90^\xa8\xe9%\xc3\xa7\xfd\xa9\xeb.\x96J\x0e\\\x97\xcc,\xe0',
-                  'peer_id': b'\x02\x83s\xb0\x97\xf5h\x8f\x7f\xcdX\x87\xa7\x9f\xfd0~$\xe8B', 'uploaded': 0,
-                  'downloaded': 0, 'port': 6881, 'left': 3767502848, 'event': 'started'}
+        file_hash = hashlib.sha1(bencode(info)).digest()
+
+        params = {'info_hash': file_hash,
+                  'peer_id': peer_id, 'uploaded': 0,
+                  'downloaded': 0, 'port': port, 'left': info['length'], 'event': 'started'}
 
         raw_response = requests.get(self.url, params=params).content
         tracker_response = bdecode(raw_response)
-        tracker_peers = [Peer(info['ip'], info['port'], info['peer id']) for info in tracker_response['peers']]
+        peers = []
 
-        return tracker_peers
+        if 'peers' in tracker_response.keys():
+            peers = [Peer(info['ip'], info['port'], info['peer id']) for info in tracker_response['peers']]
+        elif 'failure reason' in tracker_response():
+            logging.getLogger('BitTorrent').error(
+                f'Failure in tracker {self.url}: {tracker_response["failure reason"]}')
+        else:
+            logging.getLogger('BitTorrent').error(f'Unknown exception in tracker {self.url}')
+
+        return peers

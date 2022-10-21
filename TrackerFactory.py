@@ -1,15 +1,15 @@
+from typing import List
 from urllib.parse import urlparse
 
 from Exceptions import UnknownTracker
 from HTTPTracker import HTTPTracker
-from UDPTracker import UDPTracker
 from Tracker import Tracker
+from UDPTracker import UDPTracker
 
-from typing import List
 
 class TrackerFactory:
     @staticmethod
-    def create_tracker(url : str):
+    def create_tracker(url: str):
         """
         Check the scheme of the url,
         and decide which type of tracker to create.
