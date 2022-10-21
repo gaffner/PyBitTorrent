@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Added implementation to some classes">
+    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Added info hash calculation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bittorrent.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HTTPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/HTTPTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrackerFactory.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrackerFactory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrackerManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrackerManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UDPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/UDPTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +58,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--torrent c:\users\home\downloads\kubuntu.torrent" />
+      <option name="PARAMETERS" value="--torrent c:\users\home\downloads\kali.torrent" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -103,7 +97,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666300577986</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added info hash calculation">
+      <created>1666380905329</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1666380905329</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -122,15 +123,16 @@
     <MESSAGE value="Added basic classes" />
     <MESSAGE value="Added argument and bittorrent encoding parse" />
     <MESSAGE value="Added implementation to some classes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added implementation to some classes" />
+    <MESSAGE value="Added info hash calculation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added info hash calculation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HTTPTracker.py</url>
-          <line>14</line>
-          <option name="timeStamp" value="7" />
+          <line>22</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

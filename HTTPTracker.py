@@ -24,6 +24,7 @@ class HTTPTracker(Tracker):
         tracker_response = bdecode(raw_response)
         peers = []
 
+        # TODO: check if the response is in compact mode
         if 'peers' in tracker_response.keys():
             peers = [Peer(info['ip'], info['port'], info['peer id']) for info in tracker_response['peers']]
         elif 'failure reason' in tracker_response():
