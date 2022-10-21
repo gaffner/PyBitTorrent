@@ -1,12 +1,10 @@
 import logging
-from typing import Dict
-
 import rich
-from bcoding import bdecode
-
 from PeersManager import PeersManager
 from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
+from bcoding import bdecode
+from typing import Dict
 
 
 class BitTorrentClient:
@@ -14,6 +12,7 @@ class BitTorrentClient:
         self.config: Dict = {}
         self.peer_manager: PeersManager = PeersManager()
         self.tracker_manager: TrackerManager
+        self.peer_id: bytes = BitTorrentClient.generate_peer_id()
 
         # decode the config file and assign it
         logging.getLogger('BitTorrent').info('Start reading from BitTorrent file')
@@ -44,3 +43,9 @@ class BitTorrentClient:
 
     def status(self):
         pass
+
+    @staticmethod
+    def generate_peer_id():
+        # TODO: generate peer id with program version
+        return bytes([random.randint(0, 255) for i in range(20)])
+
