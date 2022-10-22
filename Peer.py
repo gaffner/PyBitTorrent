@@ -1,6 +1,7 @@
 import logging
 import socket
 import struct
+import ipaddress
 
 from Exceptions import PeerConnectionFailed
 from Message import Message, Handshake
@@ -16,7 +17,11 @@ class Peer:
         self.id = _id
         self.connected = False  # only after handshake this will be true
         self.handshake = None
-        self.socket: socket.socket = socket.socket()
+
+        if type(ipaddress.ip_address(ip)) is ipaddress.IPv6Address:
+            self.socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+        else:
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def __str__(self):
         return f'Client {self.ip}:{self.port}:{self.id[:5]}'
@@ -27,10 +32,10 @@ class Peer:
         """
         try:
             self.socket.connect((self.ip, self.port))
-        except socket.error:
-            raise PeerConnectionFailed("Failed to connect")
+        except socket.error as e:
+            raise PeerConnectionFailed(f"Failed to connect: {str(e)}")
 
-    def handshake(self, my_id, info_hash):
+    def do_handshake(self, my_id, info_hash):
         """
         Do handshake with fellow peer
         """
@@ -49,7 +54,7 @@ class Peer:
     def receive_message(self) -> Message:
         # After handshake
         if self.connected:
-            length = struct.unpack('>', self.socket.recv(4))[0]  # Big endian integer
+            length = struct.unpack('>I', self.socket.recv(4))[0]  # Big endian integer
             data = self.socket.recv(length)
             return MessageFactory.create_message(data)
 

@@ -10,7 +10,7 @@ class Message:
 
 class Handshake(Message):
     def __init__(self,  peer_id: bytes, info_hash: bytes, protocol: str = 'BitTorrent protocol'):
-        super(Handshake).__init__(HANDSHAKE)
+        super().__init__(HANDSHAKE)
         self.peer_id = peer_id
         self.info_hash = info_hash
         self.protocol = protocol
@@ -19,7 +19,7 @@ class Handshake(Message):
         protocol_len = len(self.protocol)
         handshake = struct.pack(f'>B{protocol_len}s8s20s20s',
                                 protocol_len,
-                                self.protocol,
+                                self.protocol.encode(),
                                 b'\x00' * 8,
                                 self.info_hash,
                                 self.peer_id)
@@ -28,7 +28,7 @@ class Handshake(Message):
 
     @staticmethod
     def from_bytes(payload: bytes):
-        protocol_len = struct.unpack('>B', payload[:1])
+        protocol_len = struct.unpack('>B', payload[:1])[0]
         protocol, reserved, info_hash, peer_id = struct.unpack(f'>{protocol_len}s8s20s20s', payload[1:])
 
         return Handshake(peer_id, info_hash, protocol)

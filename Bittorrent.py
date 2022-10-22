@@ -3,7 +3,6 @@ import logging
 import random
 import socket
 from copy import deepcopy
-from typing import Dict
 
 import rich
 from bcoding import bdecode, bencode
@@ -19,19 +18,18 @@ MAX_LISTENING_PORT = 6889
 
 class BitTorrentClient:
     def __init__(self, torrent):
-        self.config: Dict = {}
         self.peer_manager: PeersManager = PeersManager()
         self.tracker_manager: TrackerManager
         self.id: bytes = BitTorrentClient.generate_peer_id()
         self.listener_socket: socket.socket = socket.socket()
         self.port: int = LISTENING_PORT
         self.should_continue: bool = True
-        self.info_hash = hashlib.sha1(bencode(self.config['info'])).digest()
 
         # decode the config file and assign it
         logging.getLogger('BitTorrent').info('Start reading from BitTorrent file')
         torrent_data = torrent.read()
         self.config = bdecode(torrent_data)
+        self.info_hash = hashlib.sha1(bencode(self.config['info'])).digest()
 
         ## debug:
         config2 = deepcopy(self.config)

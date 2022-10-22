@@ -24,10 +24,11 @@ class PeersManager:
             except PeerConnectionFailed:
                 logging.getLogger('BitTorrent').info(f'Failed connecting to peer {peer}')
                 self.peers.remove(peer)
+                continue
 
             # Handshake the peer
             try:
-                peer.handshake(my_id, info_hash)
+                peer.do_handshake(my_id, info_hash)
             except PeerHandshakeFailed:
                 logging.getLogger('BitTorrent').info(f'Failed handshaking peer {peer}')
                 self.peers.remove(peer)
