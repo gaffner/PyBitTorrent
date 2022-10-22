@@ -16,7 +16,7 @@ class PeersManager:
     def add_peer(self, peer: Peer):
         self.peers.append(peer)
 
-    def do_handshake(self):
+    def send_handshake(self, my_id, info_hash):
         for peer in self.peers:
             # Connect the peers
             try:
@@ -27,7 +27,7 @@ class PeersManager:
 
             # Handshake the peer
             try:
-                peer.handshake()
+                peer.handshake(my_id, info_hash)
             except PeerHandshakeFailed:
                 logging.getLogger('BitTorrent').info(f'Failed handshaking peer {peer}')
                 self.peers.remove(peer)
@@ -38,6 +38,8 @@ class PeersManager:
         """
         Receive new messages from clients
         """
+        # select() goes here...
+
         ## FOR DEBUG ONLY:
         peer = self.peers[0]
         logging.getLogger('BitTorrent').debug(f'Choosing peer at index 1: {peer}')

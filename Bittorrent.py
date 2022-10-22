@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import random
 import socket
@@ -5,9 +6,9 @@ from copy import deepcopy
 from typing import Dict
 
 import rich
-from bcoding import bdecode
+from bcoding import bdecode, bencode
 
-from Message import Request, Piece
+from Message import Handshake, Request, Piece
 from PeersManager import PeersManager
 from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
@@ -25,6 +26,7 @@ class BitTorrentClient:
         self.listener_socket: socket.socket = socket.socket()
         self.port: int = LISTENING_PORT
         self.should_continue: bool = True
+        self.info_hash = hashlib.sha1(bencode(self.config['info'])).digest()
 
         # decode the config file and assign it
         logging.getLogger('BitTorrent').info('Start reading from BitTorrent file')
@@ -55,19 +57,25 @@ class BitTorrentClient:
         self.peer_manager.add_peers(peers)
 
         # Connect the peers
-        self.peer_manager.do_handshake()
+        self.peer_manager.send_handshake(self.id, self.info_hash)
 
         # Receive messages from peers
         self.handle_messages()
 
     def handle_messages(self):
+        # TODO: maybe move it to dictionary of functions?
         while self.should_continue:
             peer, message = self.peer_manager.receive_message()
 
-            if message is Request:
+            if type(message) is Handshake:
+                peer.verify_handshake(message)
+
+            if type(message) is Request:
                 pass
-            elif message is Piece:
+
+            elif type(message) is Piece:
                 pass
+
             else:
                 logging.getLogger('BitTorrent').error(f'Unknown message: {message.id}')
 
