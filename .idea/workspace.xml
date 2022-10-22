@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Added info hash calculation">
+    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Added todo doc">
+      <change afterPath="$PROJECT_DIR$/Message.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MessageFactory.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HTTPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/HTTPTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bittorrent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Peer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PeersManager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +109,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666380905329</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added todo doc">
+      <created>1666381822494</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1666381822494</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -124,17 +136,7 @@
     <MESSAGE value="Added argument and bittorrent encoding parse" />
     <MESSAGE value="Added implementation to some classes" />
     <MESSAGE value="Added info hash calculation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added info hash calculation" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/HTTPTracker.py</url>
-          <line>22</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Added todo doc" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added todo doc" />
   </component>
 </project>

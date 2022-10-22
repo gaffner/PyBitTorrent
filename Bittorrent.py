@@ -1,17 +1,16 @@
 import logging
 import random
 import socket
+from copy import deepcopy
 from typing import Dict
 
 import rich
 from bcoding import bdecode
 
+from Message import Request, Piece
 from PeersManager import PeersManager
 from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
-
-from copy import deepcopy
-
 
 LISTENING_PORT = 6881
 MAX_LISTENING_PORT = 6889
@@ -25,6 +24,7 @@ class BitTorrentClient:
         self.id: bytes = BitTorrentClient.generate_peer_id()
         self.listener_socket: socket.socket = socket.socket()
         self.port: int = LISTENING_PORT
+        self.should_continue: bool = True
 
         # decode the config file and assign it
         logging.getLogger('BitTorrent').info('Start reading from BitTorrent file')
@@ -53,6 +53,23 @@ class BitTorrentClient:
         self.start_listener()
         peers = self.tracker_manager.get_peers(self.id, self.port, self.config['info'])
         self.peer_manager.add_peers(peers)
+
+        # Connect the peers
+        self.peer_manager.do_handshake()
+
+        # Receive messages from peers
+        self.handle_messages()
+
+    def handle_messages(self):
+        while self.should_continue:
+            peer, message = self.peer_manager.receive_message()
+
+            if message is Request:
+                pass
+            elif message is Piece:
+                pass
+            else:
+                logging.getLogger('BitTorrent').error(f'Unknown message: {message.id}')
 
     def status(self):
         pass

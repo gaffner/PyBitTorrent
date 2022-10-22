@@ -1,4 +1,9 @@
 import socket
+import struct
+
+from Exceptions import PeerConnectionFailed
+from Message import Message
+from MessageFactory import MessageFactory
 
 
 class Peer:
@@ -15,4 +20,16 @@ class Peer:
         """
         Connect to the target client
         """
-        self.socket.connect((self.ip, self.port))
+        try:
+            self.socket.connect((self.ip, self.port))
+        except socket.error:
+            raise PeerConnectionFailed("Failed to connect")
+
+    def handshake(self):
+        pass
+
+    def receive_message(self) -> Message:
+        length = struct.unpack('<I', self.socket.recv(1))  # Big endian integer
+        data = self.socket.recv(length)
+
+        return MessageFactory.create_message(data)

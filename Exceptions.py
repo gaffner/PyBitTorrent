@@ -8,3 +8,11 @@ class UnknownTracker(BasicException):
 
 class NotSupported(BasicException):
     pass
+
+
+class PeerConnectionFailed(BasicException):
+    pass
+
+
+class PeerHandshakeFailed(BasicException):
+    pass
