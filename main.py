@@ -22,7 +22,7 @@ def main():
     # Create client from the BitTorrent Meta File
     torrent_file = args.torrent[0]
 
-    torrentClient = BitTorrentClient(torrent_file)
+    torrentClient = BitTorrentClient(torrent_file, 'peers.txt')  # Read peers from file mode
     torrentClient.start()
 
 

@@ -1,24 +1,19 @@
-from Message import Message, Handshake
+from Message import Message, Handshake, UnknownMessage
 
 
 class MessageFactory:
     @staticmethod
     def create_message(payload) -> Message:
         _id = payload[0]
+        if _id not in messages_creators:
+            return UnknownMessage(_id)
+
         return messages_creators[_id](payload)
 
     @staticmethod
     def create_handshake_message(payload):
         return Handshake.from_bytes(payload)
 
-    @staticmethod
-    def create_piece_message(payload) -> Message:
-        pass
-
-    @staticmethod
-    def create_request_message(payload) -> Message:
-        pass
 
 
-messages_creators = {1: MessageFactory.create_piece_message,
-                     2: MessageFactory.create_request_message}
+messages_creators = {}

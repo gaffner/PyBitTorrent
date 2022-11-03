@@ -11,19 +11,21 @@ from Message import Handshake, Request, Piece
 from PeersManager import PeersManager
 from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
+from Utils import read_peers_from_file
 
 LISTENING_PORT = 6881
 MAX_LISTENING_PORT = 6889
 
 
 class BitTorrentClient:
-    def __init__(self, torrent):
+    def __init__(self, torrent, peers_file=None):
         self.peer_manager: PeersManager = PeersManager()
         self.tracker_manager: TrackerManager
         self.id: bytes = BitTorrentClient.generate_peer_id()
         self.listener_socket: socket.socket = socket.socket()
         self.port: int = LISTENING_PORT
         self.should_continue: bool = True
+        self.peers_file = peers_file
 
         # decode the config file and assign it
         logging.getLogger('BitTorrent').info('Start reading from BitTorrent file')
@@ -51,7 +53,11 @@ class BitTorrentClient:
     def start(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
         self.start_listener()
-        peers = self.tracker_manager.get_peers(self.id, self.port, self.config['info'])
+        if self.peers_file:
+            peers = read_peers_from_file(self.peers_file)
+        else:
+            peers = self.tracker_manager.get_peers(self.id, self.port, self.config['info'])
+
         self.peer_manager.add_peers(peers)
 
         # Connect the peers

@@ -16,3 +16,10 @@ class PeerConnectionFailed(BasicException):
 
 class PeerHandshakeFailed(BasicException):
     pass
+
+
+class PeerDisconnected(BasicException):
+    pass
+
+class OutOfPeers(BasicException):
+    pass

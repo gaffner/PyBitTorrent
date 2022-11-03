@@ -8,8 +8,12 @@ class Message:
         self.id = _id
 
 
+class UnknownMessage(Message):
+    pass
+
+
 class Handshake(Message):
-    def __init__(self,  peer_id: bytes, info_hash: bytes, protocol: str = 'BitTorrent protocol'):
+    def __init__(self, peer_id: bytes, info_hash: bytes, protocol: str = 'BitTorrent protocol'):
         super().__init__(HANDSHAKE)
         self.peer_id = peer_id
         self.info_hash = info_hash

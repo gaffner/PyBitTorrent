@@ -1,9 +1,9 @@
+import ipaddress
 import logging
 import socket
 import struct
-import ipaddress
 
-from Exceptions import PeerConnectionFailed
+from Exceptions import PeerConnectionFailed, PeerDisconnected
 from Message import Message, Handshake
 from MessageFactory import MessageFactory
 
@@ -11,7 +11,7 @@ HANDSHAKE_STRIPPED_SIZE = 48
 
 
 class Peer:
-    def __init__(self, ip: str, port: int, _id: str = None):
+    def __init__(self, ip: str, port: int, _id: str = '00000000000000000000'):
         self.ip = ip
         self.port = port
         self.id = _id
@@ -53,16 +53,25 @@ class Peer:
 
     def receive_message(self) -> Message:
         # After handshake
+        packet_length = self.socket.recv(1)
+        if packet_length == b'':
+            logging.getLogger('BitTorrent').error(f'Client in ip {self.ip} with id {self.id} disconnected')
+            self.socket.close()
+            raise PeerDisconnected
+
         if self.connected:
-            length = struct.unpack('>I', self.socket.recv(4))[0]  # Big endian integer
+            packet_length = packet_length + self.socket.recv(3)
+            length = struct.unpack('>I', packet_length)[0]  # Big endian integer
             data = self.socket.recv(length)
+
+            logging.getLogger('BitTorrent').debug(f"packet length: {length}")
             return MessageFactory.create_message(data)
 
         # Before handshake
         else:
-            logging.getLogger('BitTorrent').info(f'Receiving handshake response from {self.id}')
-            protocol_len_bytes = self.socket.recv(1)
-            protocol_len: int = struct.unpack('>B', protocol_len_bytes)[0]
+            logging.getLogger('BitTorrent').info(
+                f'Receiving handshake response from {self.id} with length {packet_length}')
+            protocol_len: int = struct.unpack('>B', packet_length)[0]
             handshake_bytes = self.socket.recv(protocol_len + HANDSHAKE_STRIPPED_SIZE)
 
-            return MessageFactory.create_handshake_message(protocol_len_bytes + handshake_bytes)
+            return MessageFactory.create_handshake_message(packet_length + handshake_bytes)

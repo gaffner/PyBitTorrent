@@ -1,7 +1,7 @@
 import logging
 from typing import List, Tuple
 
-from Exceptions import PeerConnectionFailed, PeerHandshakeFailed
+from Exceptions import PeerConnectionFailed, PeerHandshakeFailed, PeerDisconnected, OutOfPeers
 from Message import Message
 from Peer import Peer
 
@@ -29,7 +29,7 @@ class PeersManager:
             # Handshake the peer
             try:
                 peer.do_handshake(my_id, info_hash)
-            except PeerHandshakeFailed:
+            except (PeerHandshakeFailed, PeerDisconnected):
                 logging.getLogger('BitTorrent').info(f'Failed handshaking peer {peer}')
                 self.peers.remove(peer)
 
@@ -42,8 +42,16 @@ class PeersManager:
         # select() goes here...
 
         ## FOR DEBUG ONLY:
-        peer = self.peers[0]
-        logging.getLogger('BitTorrent').debug(f'Choosing peer at index 1: {peer}')
+        if len(self.peers) == 0:
+            raise OutOfPeers
 
-        message = peer.receive_message()
+        peer = self.peers[0]
+        # logging.getLogger('BitTorrent').debug(f'Choosing peer at index 0: {peer}')
+
+        try:
+            message = peer.receive_message()
+        except PeerDisconnected:
+            self.peers.remove(peer)
+            return self.receive_message()
+
         return peer, message
