@@ -7,8 +7,9 @@ from copy import deepcopy
 import rich
 from bcoding import bdecode, bencode
 
-from Message import Handshake, Request, Piece
+from Message import Handshake, Request, Piece, KeepAlive, BitField
 from PeersManager import PeersManager
+from PiecesManager import PiecesManager
 from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
 from Utils import read_peers_from_file
@@ -49,11 +50,13 @@ class BitTorrentClient:
             trackers += new_trackers
 
         self.tracker_manager = TrackerManager(trackers)
+        self.piece_manager = PiecesManager(self.config['info']['length'], self.config['info']['piece length'])
 
     def start(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
         self.start_listener()
         if self.peers_file:
+            logging.getLogger('BitTorrent').info("Reading peers from file")
             peers = read_peers_from_file(self.peers_file)
         else:
             peers = self.tracker_manager.get_peers(self.id, self.port, self.config['info'])
@@ -74,11 +77,11 @@ class BitTorrentClient:
             if type(message) is Handshake:
                 peer.verify_handshake(message)
 
-            if type(message) is Request:
-                pass
+            elif type(message) is BitField:
+                self.piece_manager.handle_bitfield(peer, message)  # TODO: why not recognize as message?
 
-            elif type(message) is Piece:
-                pass
+            elif type(message) is KeepAlive:
+                logging.getLogger('BitTorrent').debug('Got keep alive')
 
             else:
                 logging.getLogger('BitTorrent').error(f'Unknown message: {message.id}')

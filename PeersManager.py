@@ -17,13 +17,14 @@ class PeersManager:
         self.peers.append(peer)
 
     def send_handshake(self, my_id, info_hash):
+        connected_peers = []
         for peer in self.peers:
             # Connect the peers
             try:
                 peer.connect()
+                connected_peers.append(peer)
             except PeerConnectionFailed:
                 logging.getLogger('BitTorrent').info(f'Failed connecting to peer {peer}')
-                self.peers.remove(peer)
                 continue
 
             # Handshake the peer
@@ -33,6 +34,7 @@ class PeersManager:
                 logging.getLogger('BitTorrent').info(f'Failed handshaking peer {peer}')
                 self.peers.remove(peer)
 
+        self.peers = connected_peers
         logging.getLogger('BitTorrent').info(f'Total peers connected: {len(self.peers)}')
 
     def receive_message(self) -> Tuple[Peer, Message]:

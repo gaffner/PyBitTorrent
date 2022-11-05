@@ -24,7 +24,7 @@ class Peer:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def __str__(self):
-        return f'Client {self.ip}:{self.port}:{self.id[:5]}'
+        return f'{self.ip}, {self.port}'  # Should add id
 
     def connect(self):
         """
@@ -75,3 +75,10 @@ class Peer:
             handshake_bytes = self.socket.recv(protocol_len + HANDSHAKE_STRIPPED_SIZE)
 
             return MessageFactory.create_handshake_message(packet_length + handshake_bytes)
+
+    def send_message(self, message: Message):
+        logging.getLogger('BitTorrent').debug(f'Sending message {type(message)} to {self}')
+        message_bytes = message.to_bytes()
+        self.socket.send(message_bytes)
+
+
