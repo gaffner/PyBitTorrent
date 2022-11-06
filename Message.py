@@ -32,21 +32,37 @@ class Message(ABC):
         pass
 
 
+class Unchoke(Message):
+    def __init__(self):
+        self.id = MessageCode.UNCHOKE
+        self.length = 5
+
+    def to_bytes(self) -> bytes:
+        return struct.pack('>IB',
+                           self.length,
+                           self.id)
+
+    @staticmethod
+    def from_bytes(payload):
+        # The unchoke message contains no relevant values...
+        return Unchoke()
+
+
 class Request(Message):
     def __init__(self, index, begin, length):
         self.id = MessageCode.REQUEST
         self.index = index  # 4 byte
         self.begin = begin  # 4 bytes
-        self.length = length  # 4 bytes
-        self.total_length = 13  # bytes
+        self.piece_length = length  # 4 bytes
+        self.length = 13  # bytes
 
     def to_bytes(self) -> bytes:
         return struct.pack('>IBIII',
-                           self.total_length,
+                           self.length,
                            self.id,
                            self.index,
                            self.begin,
-                           self.length)
+                           self.piece_length)
 
     @staticmethod
     def from_bytes(payload):

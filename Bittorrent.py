@@ -7,7 +7,7 @@ from copy import deepcopy
 import rich
 from bcoding import bdecode, bencode
 
-from Message import Handshake, Request, Piece, KeepAlive, BitField
+from Message import Handshake, KeepAlive, BitField, Unchoke
 from PeersManager import PeersManager
 from PiecesManager import PiecesManager
 from TrackerFactory import TrackerFactory
@@ -27,6 +27,8 @@ class BitTorrentClient:
         self.port: int = LISTENING_PORT
         self.should_continue: bool = True
         self.peers_file = peers_file
+        self.piece_manager = None
+        self.start_downloading = False
 
         # decode the config file and assign it
         logging.getLogger('BitTorrent').info('Start reading from BitTorrent file')
@@ -50,7 +52,6 @@ class BitTorrentClient:
             trackers += new_trackers
 
         self.tracker_manager = TrackerManager(trackers)
-        self.piece_manager = PiecesManager(self.config['info']['length'], self.config['info']['piece length'])
 
     def start(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
@@ -66,12 +67,19 @@ class BitTorrentClient:
         # Connect the peers
         self.peer_manager.send_handshake(self.id, self.info_hash)
 
+        # initiate pieces manager
+        self.piece_manager = PiecesManager(self.config['info']['length'], self.config['info']['piece length'],
+                                           self.peer_manager.peers)  # Very ugly
+
         # Receive messages from peers
         self.handle_messages()
 
     def handle_messages(self):
-        # TODO: maybe move it to dictionary of functions?
         while self.should_continue:
+
+            if self.start_downloading:
+                self.piece_manager.request_piece()
+
             peer, message = self.peer_manager.receive_message()
 
             if type(message) is Handshake:
@@ -82,6 +90,10 @@ class BitTorrentClient:
 
             elif type(message) is KeepAlive:
                 logging.getLogger('BitTorrent').debug('Got keep alive')
+
+            elif type(message) is Unchoke:
+                peer.is_choked = False
+                self.start_downloading = True
 
             else:
                 logging.getLogger('BitTorrent').error(f'Unknown message: {message.id}')

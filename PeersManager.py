@@ -1,4 +1,5 @@
 import logging
+import select
 from typing import List, Tuple
 
 from Exceptions import PeerConnectionFailed, PeerHandshakeFailed, PeerDisconnected, OutOfPeers
@@ -47,7 +48,18 @@ class PeersManager:
         if len(self.peers) == 0:
             raise OutOfPeers
 
-        peer = self.peers[0]
+        # TODO: peer should inherit from socket, so just pass self.peers to select
+        sockets = [peer.socket for peer in self.peers]
+        readable, _, _ = select.select(sockets, [], [])
+
+        peer = None
+        for _peer in self.peers:
+            if _peer.socket == readable[0]:
+                peer = _peer
+
+        if not peer:
+            raise NotImplemented
+
         # logging.getLogger('BitTorrent').debug(f'Choosing peer at index 0: {peer}')
 
         try:

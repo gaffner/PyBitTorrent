@@ -16,7 +16,8 @@ class Peer:
         self.port = port
         self.id = _id
         self.connected = False  # only after handshake this will be true
-        self.handshake = None
+        self.handshake = None   # Handshake still have not happened
+        self.is_choked = True   # By default the client is choked
 
         if type(ipaddress.ip_address(ip)) is ipaddress.IPv6Address:
             self.socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
