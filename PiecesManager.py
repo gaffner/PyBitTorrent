@@ -2,8 +2,6 @@ import logging
 import random
 from typing import Dict, List
 
-from bitstring import BitArray
-
 from Message import Request, Piece, BitField
 from Peer import Peer
 
@@ -50,6 +48,10 @@ class PiecesManager:
         for peer, pieces in self.pieces.items():
             if requested_piece in pieces:
                 target_peers.append(peer)
+
+        if len(target_peers) == 0:
+            logging.getLogger('BitTorrent').info(f"Found no available clients")
+            return
 
         request = Request(requested_piece, begin, self.piece_length)
         target_peer = random.choice(target_peers)

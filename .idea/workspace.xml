@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Working handshake">
+    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Added request support">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bittorrent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Message.py" beforeDir="false" afterPath="$PROJECT_DIR$/Message.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MessageFactory.py" beforeDir="false" afterPath="$PROJECT_DIR$/MessageFactory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Peer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PeersManager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PiecesManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PiecesManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +133,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666457502125</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added request support">
+      <created>1667766867068</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1667766867068</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -162,7 +164,8 @@
     <MESSAGE value="Added messages mechanism" />
     <MESSAGE value="Implement handshake mechanism" />
     <MESSAGE value="Working handshake" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working handshake" />
+    <MESSAGE value="Added request support" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added request support" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -174,7 +177,7 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/PiecesManager.py</url>
-          <line>36</line>
+          <line>34</line>
           <option name="timeStamp" value="35" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -182,6 +185,11 @@
           <url>file://$PROJECT_DIR$/Bittorrent.py</url>
           <line>98</line>
           <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PiecesManager.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="47" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -68,8 +68,8 @@ class BitTorrentClient:
         self.peer_manager.send_handshake(self.id, self.info_hash)
 
         # initiate pieces manager
-        self.piece_manager = PiecesManager(self.config['info']['length'], self.config['info']['piece length'],
-                                           self.peer_manager.peers)  # Very ugly
+        self.piece_manager = PiecesManager(self.config['info']['length'], 16384,  # 16 KB
+                                           self.peer_manager.peers)  # Passing peers to pieces manager is very ugly
 
         # Receive messages from peers
         self.handle_messages()
