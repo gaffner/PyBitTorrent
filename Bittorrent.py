@@ -32,6 +32,7 @@ class BitTorrentClient:
         self.id: bytes = generate_peer_id()
         self.listener_socket: socket.socket = socket.socket()
         self.port: int = LISTENING_PORT
+        self.tracker_manager = None
         self.peers_file = peers_file
         self.pieces: List[Piece] = []
         self.have_all_pieces = False
@@ -48,17 +49,8 @@ class BitTorrentClient:
         config2['info']['pieces'] = ''
         rich.print(config2)
 
-        # create tracker for each tracker url in the config file
-        trackers = []
-        if 'announce' in self.config.keys():
-            tracker = TrackerFactory.create_tracker(self.config['announce'])
-            trackers.append(tracker)
+        # create tracker for each tracker url in the config file TODO: move it to tracker manager?
 
-        if 'announce-list' in self.config.keys():
-            new_trackers = TrackerFactory.create_trackers(self.config['announce-list'])
-            trackers += new_trackers
-
-        self.tracker_manager = TrackerManager(trackers)
 
     def start(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
@@ -67,6 +59,16 @@ class BitTorrentClient:
             logging.getLogger('BitTorrent').info("Reading peers from file")
             peers = read_peers_from_file(self.peers_file)
         else:
+            trackers = []
+            if 'announce' in self.config.keys():
+                tracker = TrackerFactory.create_tracker(self.config['announce'])
+                trackers.append(tracker)
+
+            if 'announce-list' in self.config.keys():
+                new_trackers = TrackerFactory.create_trackers(self.config['announce-list'])
+                trackers += new_trackers
+
+            self.tracker_manager = TrackerManager(trackers)
             peers = self.tracker_manager.get_peers(self.id, self.port, self.config['info'])
 
         self.peer_manager.add_peers(peers)
@@ -116,8 +118,8 @@ class BitTorrentClient:
             self.request_current_block()
             time.sleep(REQUEST_INTERVAL)
 
-        logging.getLogger('BitTorrent').critical(f'Finish downloading all pieces, saving to file')
-        logging.getLogger('BitTorrent').critical(f'GoodBye!')
+        logging.getLogger('BitTorrent').critical(f'Finish downloading all pieces, GoodBye!')
+        self.piece_manager.close()
 
     def request_current_block(self):
         for piece in self.pieces:
@@ -129,7 +131,7 @@ class BitTorrentClient:
                 return
 
             except PieceIsPending:
-                logging.getLogger('BitTorrent').info(f'Piece {piece} is pending')
+                logging.getLogger('BitTorrent').debug(f'Piece {piece} is pending')
 
             except PieceIsFull:
                 logging.getLogger('BitTorrent').info(f'All blocks of piece {piece.index} are full, writing to disk...')
