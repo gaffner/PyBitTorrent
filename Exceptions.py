@@ -21,5 +21,22 @@ class PeerHandshakeFailed(BasicException):
 class PeerDisconnected(BasicException):
     pass
 
+
 class OutOfPeers(BasicException):
+    pass
+
+
+class PieceIsPending(BasicException):
+    pass
+
+
+class PieceIsFull(BasicException):
+    pass
+
+
+class NoPieceFound(BasicException):
+    pass
+
+
+class NoPeersHavePiece(BasicException):
     pass

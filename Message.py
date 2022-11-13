@@ -1,6 +1,7 @@
 import enum
 import struct
 from abc import ABC, abstractmethod
+from typing import Union
 
 from bitstring import BitArray
 
@@ -48,28 +49,6 @@ class Unchoke(Message):
         return Unchoke()
 
 
-class Request(Message):
-    def __init__(self, index, begin, length):
-        self.id = MessageCode.REQUEST
-        self.index = index  # 4 byte
-        self.begin = begin  # 4 bytes
-        self.piece_length = length  # 4 bytes
-        self.length = 13  # bytes
-
-    def to_bytes(self) -> bytes:
-        return struct.pack('>IBIII',
-                           self.length,
-                           self.id,
-                           self.index,
-                           self.begin,
-                           self.piece_length)
-
-    @staticmethod
-    def from_bytes(payload):
-        _, _, index, begin, length = struct.unpack('>IBIII', payload)
-        return Request(index, begin, length)
-
-
 class BitField(Message):
     def __init__(self, bitfield):
         self.bitfield = BitArray(bitfield)
@@ -114,8 +93,43 @@ class Handshake(Message):
         return self.info_hash == other.info_hash
 
 
-class Piece(Message):
-    pass
+class Request(Message):
+    def __init__(self, index, offset, length):
+        self.id = MessageCode.REQUEST
+        self.index = index  # 4 byte
+        self.begin = offset  # 4 bytes
+        self.piece_length = length  # 4 bytes
+        self.length = 13  # bytes
+
+    def to_bytes(self) -> bytes:
+        return struct.pack('>IBIII',
+                           self.length,
+                           self.id,
+                           self.index,
+                           self.begin,
+                           self.piece_length)
+
+    @staticmethod
+    def from_bytes(payload):
+        _, _, index, begin, length = struct.unpack('>IBIII', payload)
+        return Request(index, begin, length)
+
+
+class PieceMessage(Message):
+    def __init__(self, index, offset, data):
+        self.index = index
+        self.offset = offset
+        self.data = data
+
+    @staticmethod
+    def from_bytes(payload):
+        index, offset = struct.unpack('>II', payload[:8])
+        data = payload[8:]
+
+        return PieceMessage(index, offset, data)
+
+    def to_bytes(self) -> bytes:
+        pass
 
 
 class UnknownMessage(Message):
@@ -137,3 +151,7 @@ class KeepAlive(Message):
     @staticmethod
     def from_bytes(payload):
         pass
+
+
+# Use for typing
+MessageTypes = Union[Message, Handshake, Request, PieceMessage, BitField, Unchoke, UnknownMessage]

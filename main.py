@@ -9,7 +9,7 @@ def main():
     Script for downloading torrent files
     """
     # init logger and argument parser
-    logging.basicConfig(level=logging.DEBUG,
+    logging.basicConfig(level=logging.CRITICAL,
                         format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S'
                         )
@@ -21,8 +21,8 @@ def main():
     # Create client from the BitTorrent Meta File
     torrent_file = args.torrent[0]
 
-    # torrentClient = BitTorrentClient(torrent_file)  # 'peers.txt' Read peers from file mode
-    torrentClient = BitTorrentClient(torrent_file, 'peers.txt')  # Read peers from file mode
+    torrentClient = BitTorrentClient(torrent_file)  # 'peers.txt' Read peers from file mode
+    # torrentClient = BitTorrentClient(torrent_file, 'peers.txt')  # Read peers from file mode
     torrentClient.start()
 
 

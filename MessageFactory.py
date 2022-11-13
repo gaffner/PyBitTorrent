@@ -1,5 +1,5 @@
 from Message import MessageCode, Message, Handshake,\
-    UnknownMessage, KeepAlive, BitField, Unchoke
+    UnknownMessage, KeepAlive, BitField, Unchoke, PieceMessage
 
 
 class MessageFactory:
@@ -26,6 +26,11 @@ class MessageFactory:
     def create_unchoke_message(payload):
         return Unchoke.from_bytes(payload)
 
+    @staticmethod
+    def create_piece_message(payload):
+        return PieceMessage.from_bytes(payload)
+
 
 messages_creators = {MessageCode.BITFIELD: MessageFactory.create_bitfield_message,
-                     MessageCode.UNCHOKE: MessageFactory.create_unchoke_message}
+                     MessageCode.UNCHOKE: MessageFactory.create_unchoke_message,
+                     MessageCode.PIECE: MessageFactory.create_piece_message}

@@ -1,9 +1,10 @@
 import logging
+import random
 import select
 from typing import List, Tuple
 
-from Exceptions import PeerConnectionFailed, PeerHandshakeFailed, PeerDisconnected, OutOfPeers
-from Message import Message
+from Exceptions import PeerConnectionFailed, PeerHandshakeFailed, PeerDisconnected, OutOfPeers, NoPeersHavePiece
+from Message import MessageTypes
 from Peer import Peer
 
 
@@ -13,6 +14,9 @@ class PeersManager:
 
     def add_peers(self, peers: List[Peer]):
         self.peers += peers
+
+    def remove_peer(self, peer):
+        self.peers.remove(peer)
 
     def add_peer(self, peer: Peer):
         self.peers.append(peer)
@@ -38,7 +42,7 @@ class PeersManager:
         self.peers = connected_peers
         logging.getLogger('BitTorrent').info(f'Total peers connected: {len(self.peers)}')
 
-    def receive_message(self) -> Tuple[Peer, Message]:
+    def receive_message(self) -> Tuple[Peer, MessageTypes]:
         """
         Receive new messages from clients
         """
@@ -69,3 +73,14 @@ class PeersManager:
             return self.receive_message()
 
         return peer, message
+
+    def get_random_peer_by_piece(self, piece):
+        peers_have_piece = []
+        for peer in self.peers:
+            if peer.have_piece(piece):
+                peers_have_piece.append(peer)
+
+        if peers_have_piece:
+            return random.choice(peers_have_piece)
+
+        raise NoPeersHavePiece

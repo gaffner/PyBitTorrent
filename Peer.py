@@ -3,8 +3,10 @@ import logging
 import socket
 import struct
 
+from bitstring import BitArray
+
 from Exceptions import PeerConnectionFailed, PeerDisconnected
-from Message import Message, Handshake
+from Message import Message, Handshake, BitField
 from MessageFactory import MessageFactory
 
 HANDSHAKE_STRIPPED_SIZE = 48
@@ -16,8 +18,9 @@ class Peer:
         self.port = port
         self.id = _id
         self.connected = False  # only after handshake this will be true
-        self.handshake = None   # Handshake still have not happened
-        self.is_choked = True   # By default the client is choked
+        self.handshake = None  # Handshake still have not happened
+        self.is_choked = True  # By default the client is choked
+        self.bitfield: BitArray = BitArray()
 
         if type(ipaddress.ip_address(ip)) is ipaddress.IPv6Address:
             self.socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
@@ -52,9 +55,16 @@ class Peer:
 
         return False
 
+    def set_bitfield(self, bitfield: BitField):
+        self.bitfield = bitfield.bitfield
+
     def receive_message(self) -> Message:
         # After handshake
-        packet_length = self.socket.recv(1)
+        try:
+            packet_length = self.socket.recv(1)
+        except WindowsError:
+            raise PeerDisconnected
+
         if packet_length == b'':
             logging.getLogger('BitTorrent').error(f'Client in ip {self.ip} with id {self.id} disconnected')
             self.socket.close()
@@ -70,7 +80,7 @@ class Peer:
 
         # Before handshake
         else:
-            logging.getLogger('BitTorrent').info(
+            logging.getLogger('BitTorrent').debug(
                 f'Receiving handshake response from {self.id} with length {packet_length}')
             protocol_len: int = struct.unpack('>B', packet_length)[0]
             handshake_bytes = self.socket.recv(protocol_len + HANDSHAKE_STRIPPED_SIZE)
@@ -78,8 +88,18 @@ class Peer:
             return MessageFactory.create_handshake_message(packet_length + handshake_bytes)
 
     def send_message(self, message: Message):
-        logging.getLogger('BitTorrent').debug(f'Sending message {type(message)} to {self}')
+        # logging.getLogger('BitTorrent').debug(f'Sending message {type(message)} to {self}')
         message_bytes = message.to_bytes()
-        self.socket.send(message_bytes)
+        try:
+            self.socket.send(message_bytes)
+        except WindowsError:
+            raise PeerDisconnected
 
+    def set_unchoke(self, _):
+        self.is_choked = False
 
+    def have_piece(self, piece):
+        if piece.index < self.bitfield.length:
+            return self.bitfield[piece.index]
+        else:
+            return False
