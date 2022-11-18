@@ -9,4 +9,8 @@ class PieceManager:
         piece_data = piece.get_data()
         self.file.seek(piece.size * piece.index)
         self.file.write(piece_data)
+        self.file.flush()
+
+    def close(self):
+        self.file.close()
 
