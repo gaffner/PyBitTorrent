@@ -28,6 +28,7 @@ class PeersManager:
             try:
                 peer.connect()
                 connected_peers.append(peer)
+                logging.getLogger('BitTorrent').info(f'Success in connecting to peer {peer}')
             except PeerConnectionFailed:
                 logging.getLogger('BitTorrent').info(f'Failed connecting to peer {peer}')
                 continue
