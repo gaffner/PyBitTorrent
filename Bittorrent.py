@@ -1,6 +1,7 @@
 import hashlib
 import logging
 import socket
+import struct
 import time
 from copy import deepcopy
 from threading import Thread
@@ -36,7 +37,7 @@ class BitTorrentClient:
         self.peers_file = peers_file
         self.pieces: List[Piece] = []
         self.have_all_pieces = False
-        self.piece_manager = PieceManager('test.bin')
+        self.piece_manager = PieceManager('test2.bin')
         self.written_pieces_length = 0
         # decode the config file and assign it
         logging.getLogger('BitTorrent').critical('Start reading from BitTorrent file')
@@ -81,7 +82,10 @@ class BitTorrentClient:
 
     def handle_messages(self):
         while True:
-            peer, message = self.peer_manager.receive_message()
+            try:
+                peer, message = self.peer_manager.receive_message()
+            except struct.error as e:
+                logging.getLogger('BitTorrent').critical(f'error: {e}')
 
             if type(message) is Handshake:
                 peer.verify_handshake(message)
@@ -168,6 +172,7 @@ class BitTorrentClient:
             piece = self._get_piece_by_index(pieceMessage.index)
             block = piece.get_block_by_offset(pieceMessage.offset)
             block.status = BlockStatus.FULL
+            block.data = pieceMessage.data
             logging.getLogger('BitTorrent').info(f'Successfully got block {block.offset} of piece {piece.index}')
 
         except (NoPieceFound, PieceIsPending):
