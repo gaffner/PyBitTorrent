@@ -49,7 +49,7 @@ class BitTorrentClient:
         config2['info']['pieces'] = ''
         rich.print(config2)
 
-        # create tracker for each tracker url in the config file
+        # create tracker for each url of tracker in the config file
         trackers = []
         if 'announce' in self.config.keys():
             tracker = TrackerFactory.create_tracker(self.config['announce'])
