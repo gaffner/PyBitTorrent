@@ -4,9 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Added some trash code for receiving pieces">
+    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Change comment">
+      <change afterPath="$PROJECT_DIR$/TorrentFile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bittorrent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HTTPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/HTTPTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Peer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrackerManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrackerManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UDPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/UDPTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test2.bin" beforeDir="false" afterPath="$PROJECT_DIR$/test2.bin" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +67,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--torrent c:\users\home\downloads\kubuntu.torrent" />
+      <option name="PARAMETERS" value="--torrent c:\users\home\downloads\ubuntu2.torrent" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -147,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667768127568</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Change comment">
+      <created>1668847687163</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1668847687163</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -173,20 +188,31 @@
     <MESSAGE value="Working handshake" />
     <MESSAGE value="Added request support" />
     <MESSAGE value="Added some trash code for receiving pieces" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added some trash code for receiving pieces" />
+    <MESSAGE value="Change comment" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change comment" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Block.py</url>
-          <line>32</line>
-          <option name="timeStamp" value="9" />
+          <url>file://$PROJECT_DIR$/Bittorrent.py</url>
+          <line>116</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Bittorrent.py</url>
+          <line>139</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Piece.py</url>
-          <line>21</line>
-          <option name="timeStamp" value="10" />
+          <line>32</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/HTTPTracker.py</url>
+          <line>39</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -195,6 +221,7 @@
         <watch expression="block.offset" language="Python" />
         <watch expression="piece.index" language="Python" />
         <watch expression="piece_data" language="Python" />
+        <watch expression="self.length" language="Python" />
       </configuration>
     </watches-manager>
   </component>

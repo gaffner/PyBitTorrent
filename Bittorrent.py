@@ -20,6 +20,8 @@ from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
 from Utils import generate_peer_id, read_peers_from_file
 
+from TorrentFile import TorrentFile
+
 LISTENING_PORT = 6881
 MAX_LISTENING_PORT = 6889
 REQUEST_INTERVAL = 0.2
@@ -35,28 +37,20 @@ class BitTorrentClient:
         self.port: int = LISTENING_PORT
         self.peers_file = peers_file
         self.pieces: List[Piece] = []
-        self.have_all_pieces = False
-        self.piece_manager = PieceManager('test2.bin')
+        self.should_continue = True
+        self.piece_manager = PieceManager('test2.bin')  # TODO: change to real file name
         self.written_pieces_length = 0
         # decode the config file and assign it
-        logging.getLogger('BitTorrent').critical('Start reading from BitTorrent file')
-        torrent_data = torrent.read()
-        self.config = bdecode(torrent_data)
-        self.info_hash = hashlib.sha1(bencode(self.config['info'])).digest()
-
-        ## debug:
-        config2 = deepcopy(self.config)
-        config2['info']['pieces'] = ''
-        rich.print(config2)
+        self.torrent = TorrentFile(torrent)
 
         # create tracker for each url of tracker in the config file
         trackers = []
-        if 'announce' in self.config.keys():
-            tracker = TrackerFactory.create_tracker(self.config['announce'])
+        if 'announce' in self.torrent.config:
+            tracker = TrackerFactory.create_tracker(self.torrent.config['announce'])
             trackers.append(tracker)
 
-        if 'announce-list' in self.config.keys():
-            new_trackers = TrackerFactory.create_trackers(self.config['announce-list'])
+        if 'announce-list' in self.torrent.config:
+            new_trackers = TrackerFactory.create_trackers(self.torrent.config['announce-list'])
             trackers += new_trackers
 
         self.tracker_manager = TrackerManager(trackers)
@@ -68,10 +62,17 @@ class BitTorrentClient:
             logging.getLogger('BitTorrent').info("Reading peers from file")
             peers = read_peers_from_file(self.peers_file)
         else:
-            peers = self.tracker_manager.get_peers(self.id, self.port, self.config['info'])
+            peers = self.tracker_manager.get_peers(self.id, self.port, self.torrent)
+            if len(peers) == 0:
+                raise Exception("No peers found")
+
+        logging.getLogger('BitTorrent').critical(f"Rumber of connected peers: {len(peers)}")
+        if len(peers) > 20:
+            peers = peers[:20]
+            print('Cutting peers')
 
         self.peer_manager.add_peers(peers)
-        self.peer_manager.send_handshake(self.id, self.info_hash)  # Connect the peers
+        self.peer_manager.send_handshake(self.id, self.torrent.hash)  # Connect the peers
 
         requester = Thread(target=self.piece_requester)
         requester.start()
@@ -113,14 +114,14 @@ class BitTorrentClient:
         is yes - request it from random peer.
         """
 
-        file_size, piece_size = self.config['info']['length'], self.config['info']['piece length']
+        file_size, piece_size = self.torrent.length, self.torrent.piece_size
         self.pieces = create_pieces(file_size, piece_size)
 
-        while not self.have_all_pieces:
+        while self.should_continue:
             self.request_current_block()
             time.sleep(REQUEST_INTERVAL)
 
-        logging.getLogger('BitTorrent').critical(f'Finish downloading all pieces, GoodBye!')
+        logging.getLogger('BitTorrent').critical(f'Exiting the requesting loop...')
         self.piece_manager.close()
 
     def request_current_block(self):
@@ -136,7 +137,7 @@ class BitTorrentClient:
                 logging.getLogger('BitTorrent').debug(f'Piece {piece} is pending')
 
             except PieceIsFull:
-                logging.getLogger('BitTorrent').info(f'All blocks of piece {piece.index} are full, writing to disk...')
+                logging.getLogger('BitTorrent').critical(f'All blocks of piece {piece.index} are full, writing to disk...')
 
                 self.piece_manager.write_piece(piece)
                 self.pieces.remove(piece)
@@ -150,13 +151,13 @@ class BitTorrentClient:
                 return
 
             except NoPeersHavePiece:
-                logging.getLogger('BitTorrent').info(f'No peers have piece {piece.index}')
+                logging.getLogger('BitTorrent').critical(f'No peers have piece {piece.index}')
 
             except PeerDisconnected:
                 logging.getLogger('BitTorrent').info(f'Peer {peer} disconnected when requesting for piece')
                 self.peer_manager.remove_peer(peer)
 
-        self.have_all_pieces = True
+        self.should_continue = False
 
     def _get_piece_by_index(self, index):
         for piece in self.pieces:

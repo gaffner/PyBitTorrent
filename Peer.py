@@ -26,6 +26,7 @@ class Peer:
             self.socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
         else:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.socket.settimeout(5)
 
     def __str__(self):
         return f'{self.ip}, {self.port}'  # Should add id

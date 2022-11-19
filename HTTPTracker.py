@@ -1,33 +1,46 @@
-import hashlib
 import logging
-from typing import Dict
 from typing import List
 
 import requests
-from bcoding import bdecode, bencode
+from bcoding import bdecode
 
 from Peer import Peer
+from TorrentFile import TorrentFile
 from Tracker import Tracker
 
 
 class HTTPTracker(Tracker):
-    def get_peers(self, peer_id: bytes, port: int, info: Dict) -> List[Peer]:
+    timeout = 3  # seconds
+
+    def get_peers(self, peer_id: bytes, port: int, torrent: TorrentFile) -> List[Peer]:
         logging.getLogger('BitTorrent').error(f'Connecting to HTTP Tracker {self.url}')
 
-        file_hash = hashlib.sha1(bencode(info)).digest()
-
-        params = {'info_hash': file_hash,
+        params = {'info_hash': torrent.hash,
                   'peer_id': peer_id, 'uploaded': 0,
-                  'downloaded': 0, 'port': port, 'left': info['length'], 'event': 'started'}
+                  'downloaded': 0, 'port': port, 'left': torrent.length, 'event': 'started'}
+        try:
+            raw_response = requests.get(self.url, params=params, timeout=HTTPTracker.timeout).content
+            tracker_response = bdecode(raw_response)
+            logging.getLogger('BitTorrent').critical(f'success in scraping {self.url}')
+        except (requests.exceptions.RequestException, TypeError):
+            logging.getLogger('BitTorrent').error(f'Failed to scrape {self.url}')
+            return []
 
-        raw_response = requests.get(self.url, params=params).content
-        tracker_response = bdecode(raw_response)
         peers = []
 
         # TODO: check if the response is in compact mode
-        if 'peers' in tracker_response.keys():
-            peers = [Peer(info['ip'], info['port'], info['peer id']) for info in tracker_response['peers']]
-        elif 'failure reason' in tracker_response():
+        if 'peers' in tracker_response or 'peers6' in tracker_response:
+            peers_key = 'peers'
+            if 'peers6' in tracker_response:
+                peers_key += '6'
+
+            if type(tracker_response[peers_key]) is list:
+                peers = [Peer(info['ip'], info['port'], info['peer id']) for info in tracker_response[peers_key]]
+            else:
+                logging.getLogger('BitTorrent').info(f'Tracker {self.url} using compact mode')
+                peers = Tracker.extract_compact_peers(tracker_response[peers_key])
+
+        elif 'failure reason' in tracker_response:
             logging.getLogger('BitTorrent').error(
                 f'Failure in tracker {self.url}: {tracker_response["failure reason"]}')
         else:
