@@ -22,7 +22,7 @@ def main():
     torrent_file = args.torrent[0]
 
     torrentClient = BitTorrentClient(torrent_file)  # 'peers.txt' Read peers from file mode
-    # torrentClient = BitTorrentClient(torrent_file, 'peers.txt')  # Read peers from file mode
+    # torrentClient = BitTorrentClient(torrent_file, '/home/home/Desktop/peers')  # Read peers from file mode
     torrentClient.start()
 
 

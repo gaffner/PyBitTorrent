@@ -5,13 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Added working torrent">
-      <change afterPath="$PROJECT_DIR$/UDPTrackerMessage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bittorrent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HTTPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/HTTPTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Message.py" beforeDir="false" afterPath="$PROJECT_DIR$/Message.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Peer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UDPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/UDPTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PeersManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrackerManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/TrackerManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -232,13 +231,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/TrackerManager.py</url>
-          <line>18</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">

@@ -71,7 +71,7 @@ class BitTorrentClient:
             if len(peers) == 0:
                 raise Exception("No peers found")
 
-        logging.getLogger('BitTorrent').critical(f"Rumber of connected peers: {len(peers)}")
+        logging.getLogger('BitTorrent').critical(f"Number of peers: {len(peers)}")
 
         self.peer_manager.add_peers(peers)
         self.peer_manager.send_handshake(self.id, self.torrent.hash)  # Connect the peers
@@ -153,8 +153,8 @@ class BitTorrentClient:
                 continue
 
             except NoPeersHavePiece:
-                logging.getLogger('BitTorrent').debug(f'No peers have piece {piece.index}')
-
+                # logging.getLogger('BitTorrent').debug(f'No peers have piece {piece.index}')
+                pass
             except PeerDisconnected:
                 logging.getLogger('BitTorrent').error(f'Peer {peer} disconnected when requesting for piece')
                 self.peer_manager.remove_peer(peer)

@@ -7,6 +7,8 @@ from Exceptions import PeerConnectionFailed, PeerHandshakeFailed, PeerDisconnect
 from Message import MessageTypes
 from Peer import Peer
 
+MAX_CONNECTED_PEERS = 12  # we are doing this because in the current status we are doing sync-check of the sockets
+
 
 class PeersManager:
     def __init__(self):
@@ -29,6 +31,8 @@ class PeersManager:
             try:
                 peer.connect()
                 connected_peers.append(peer)
+                logging.getLogger('BitTorrent').info(f'Connected to peer {peer},'
+                                                     f'total: {len(connected_peers)}/{MAX_CONNECTED_PEERS}')
             except PeerConnectionFailed:
                 logging.getLogger('BitTorrent').info(f'Failed connecting to peer {peer}')
                 continue
@@ -36,6 +40,9 @@ class PeersManager:
             # Handshake the peer
             try:
                 peer.do_handshake(my_id, info_hash)
+                if len(connected_peers) >= MAX_CONNECTED_PEERS:
+                    logging.getLogger('BitTorrent').info(f'Reached max connected peers of {MAX_CONNECTED_PEERS}')
+                    break
             except (PeerHandshakeFailed, PeerDisconnected):
                 logging.getLogger('BitTorrent').info(f'Failed handshaking peer {peer}')
                 self.remove_peer(peer)

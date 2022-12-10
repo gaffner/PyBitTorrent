@@ -1,4 +1,4 @@
-from typing import Dict
+import random
 from typing import List
 
 from Peer import Peer
@@ -16,4 +16,5 @@ class TrackerManager:
             tracker_peers = tracker.get_peers(peer_id, port, torrent_file)
             peers += tracker_peers
 
+        # random.shuffle(peers)  # avoid deterministic result
         return peers

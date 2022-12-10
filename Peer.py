@@ -36,7 +36,7 @@ class Peer:
         Connect to the target client
         """
         try:
-            self.socket.settimeout(2)
+            self.socket.settimeout(1)
             # self.socket.gettimeout()
             self.socket.connect((self.ip, self.port))
         except socket.error as e:
