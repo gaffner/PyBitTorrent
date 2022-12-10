@@ -21,6 +21,7 @@ from TrackerManager import TrackerManager
 from Utils import generate_peer_id, read_peers_from_file
 import multiprocessing
 from TorrentFile import TorrentFile
+from rich.progress import track
 
 LISTENING_PORT = 6881
 MAX_LISTENING_PORT = 6889
@@ -57,9 +58,6 @@ class BitTorrentClient:
         self.pieces = create_pieces(file_size, piece_size)
         self.number_of_pieces = len(self.pieces)
 
-        progress = Thread(target=Utils.show_downloading_progress, args=(self.piece_manager, len(self.pieces)))
-        progress.start()
-        
         self.use_progress_bar = True
 
     def start(self):
@@ -81,8 +79,12 @@ class BitTorrentClient:
         requester = Thread(target=self.piece_requester)
         requester.start()
 
-        self.handle_messages()
+        self.progress_download()
         print("GoodBye!")
+
+    def progress_download(self):
+        for _ in track(range(len(self.pieces)), description=f"Downloading {self.torrent.file_name}"):
+            self.handle_messages()
 
     def handle_messages(self):
         while not self._all_pieces_full():
@@ -111,8 +113,8 @@ class BitTorrentClient:
                 peer.set_unchoke(Unchoke)
 
             elif type(message) is PieceMessage:
-                self.handle_piece(message)
-
+                if self.handle_piece(message):
+                    return
 
             else:
                 logging.getLogger('BitTorrent').error(f'Unknown message: {message.id}')  # should be error
@@ -193,6 +195,7 @@ class BitTorrentClient:
                     print("Progress: {have}/{total}".format(have=self.piece_manager.written,
                                                             total=self.number_of_pieces))
                 del piece
+                return True
 
         except PieceIsPending:
             logging.getLogger('BitTorrent').debug(f'Piece {pieceMessage.index} is pending')
@@ -200,3 +203,5 @@ class BitTorrentClient:
         except NoPieceFound:
             logging.getLogger('BitTorrent').debug(f'Piece {pieceMessage.index} not found')
             # import ipdb; ipdb.set_trace(context=25)
+
+        return False

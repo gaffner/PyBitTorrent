@@ -10,21 +10,21 @@ from PiecesManager import PieceManager
 
 import time
 
-
-def show_downloading_progress(pieces_manager: PieceManager, pieces_length: int):
-    written = 0
-    print("Starting the progress bar")
-    for _ in track(range(pieces_length), description=f"Dowloading"):
-        while True:
-            if pieces_manager.written > written:
-                written = pieces_manager.written
-                break
-    return
-    #
-    # while True:
-    #     if pieces_length <= pieces_manager.written:
-    #         print("Breaking")
-    #         return
+#
+# def show_downloading_progress(pieces_manager: PieceManager, pieces_length: int):
+#     written = 0
+#     print("Starting the progress bar")
+#     for _ in track(range(pieces_length), description=f"Dowloading"):
+#         while True:
+#             if pieces_manager.written > written:
+#                 written = pieces_manager.written
+#                 break
+#     return
+#     #
+#     # while True:
+#     #     if pieces_length <= pieces_manager.written:
+#     #         print("Breaking")
+#     #         return
 
 def read_peers_from_file(peers_file_path):
     """

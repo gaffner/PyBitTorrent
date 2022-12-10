@@ -36,6 +36,8 @@ class Peer:
         Connect to the target client
         """
         try:
+            # self.socket.settimeout()
+            # self.socket.gettimeout()
             self.socket.connect((self.ip, self.port))
         except socket.error as e:
             raise PeerConnectionFailed(f"Failed to connect: {str(e)}")
@@ -81,12 +83,9 @@ class Peer:
             packet_length = packet_length + self.socket.recv(3)
             length = struct.unpack('>I', packet_length)[0]  # Big endian integer
             data = self.socket.recv(length)
-            if len(data) != length:
-                print("Different:", length, len(data))
 
             while len(data) != length:
                 odd = length - len(data)
-                print("Recieved")
                 data += self.socket.recv(odd)
 
             logging.getLogger('BitTorrent').debug(f"packet length: {length}")
