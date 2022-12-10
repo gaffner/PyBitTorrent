@@ -19,7 +19,7 @@ from PiecesManager import PieceManager
 from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
 from Utils import generate_peer_id, read_peers_from_file
-
+import multiprocessing
 from TorrentFile import TorrentFile
 
 LISTENING_PORT = 6881
@@ -30,7 +30,6 @@ REQUEST_INTERVAL = 0.2
 class BitTorrentClient:
 
     def __init__(self, torrent, peers_file=None):
-        self.empty = 0
         self.peer_manager: PeersManager = PeersManager()
         self.tracker_manager: TrackerManager
         self.id: bytes = generate_peer_id()
@@ -57,9 +56,11 @@ class BitTorrentClient:
         file_size, piece_size = self.torrent.length, self.torrent.piece_size
         self.pieces = create_pieces(file_size, piece_size)
         self.number_of_pieces = len(self.pieces)
-        #
-        # progress = Thread(target=Utils.show_downloading_progress, args=(self.piece_manager, len(self.pieces)))
-        # progress.start()
+
+        progress = Thread(target=Utils.show_downloading_progress, args=(self.piece_manager, len(self.pieces)))
+        progress.start()
+        
+        self.use_progress_bar = True
 
     def start(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
@@ -81,7 +82,7 @@ class BitTorrentClient:
         requester.start()
 
         self.handle_messages()
-        print("GoodBye!", self.empty)
+        print("GoodBye!")
 
     def handle_messages(self):
         while not self._all_pieces_full():
@@ -114,7 +115,7 @@ class BitTorrentClient:
 
 
             else:
-                logging.getLogger('BitTorrent').debug(f'Unknown message: {message.id}')  # should be error
+                logging.getLogger('BitTorrent').error(f'Unknown message: {message.id}')  # should be error
 
     def piece_requester(self):
         """
@@ -141,7 +142,7 @@ class BitTorrentClient:
                 return
 
             except PieceIsPending:
-                logging.getLogger('BitTorrent').debug(f'Piece {piece} is pending')
+                # logging.getLogger('BitTorrent').debug(f'Piece {piece} is pending')
                 continue
 
             except PieceIsFull:
@@ -175,8 +176,7 @@ class BitTorrentClient:
     def handle_piece(self, pieceMessage: PieceMessage):
         try:
             if len(pieceMessage.data) == 0:
-                # print('Empty piece:', pieceMessage.index)
-                self.empty += 1
+                print('Empty piece:', pieceMessage.index)
                 return
 
             piece = self._get_piece_by_index(pieceMessage.index)
@@ -189,8 +189,9 @@ class BitTorrentClient:
             if piece.is_full():
                 self.piece_manager.write_piece(piece, self.torrent.piece_size)
                 self.pieces.remove(piece)
-                print("Progress: {have}/{total}".format(have=self.piece_manager.written,
-                                                        total=self.number_of_pieces), end="\r")
+                if not self.use_progress_bar:
+                    print("Progress: {have}/{total}".format(have=self.piece_manager.written,
+                                                            total=self.number_of_pieces))
                 del piece
 
         except PieceIsPending:

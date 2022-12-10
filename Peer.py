@@ -81,9 +81,20 @@ class Peer:
             packet_length = packet_length + self.socket.recv(3)
             length = struct.unpack('>I', packet_length)[0]  # Big endian integer
             data = self.socket.recv(length)
+            if len(data) != length:
+                print("Different:", length, len(data))
+
+            while len(data) != length:
+                odd = length - len(data)
+                print("Recieved")
+                data += self.socket.recv(odd)
 
             logging.getLogger('BitTorrent').debug(f"packet length: {length}")
             return MessageFactory.create_message(data)
+            # message = MessageFactory.create_message(data)
+            # if message.should_wait_for_data():
+            #     print("Waiting for data...")
+
 
         # Before handshake
         else:

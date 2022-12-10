@@ -32,6 +32,13 @@ class Message(ABC):
     def from_bytes(payload):
         pass
 
+    def should_wait_for_data(self):
+        """
+        If the message have data field,
+        check if should wait until it's full
+        """
+        return False
+
 
 class Unchoke(Message):
     def __init__(self):
@@ -130,6 +137,9 @@ class PieceMessage(Message):
 
     def to_bytes(self) -> bytes:
         pass
+
+    def should_wait_for_data(self):
+        return len(self.data) == 0
 
 
 class HaveMessage(Message):
