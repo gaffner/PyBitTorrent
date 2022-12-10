@@ -16,7 +16,8 @@ class PeersManager:
         self.peers += peers
 
     def remove_peer(self, peer):
-        self.peers.remove(peer)
+        if peer in self.peers:
+            self.peers.remove(peer)
 
     def add_peer(self, peer: Peer):
         self.peers.append(peer)
@@ -37,7 +38,7 @@ class PeersManager:
                 peer.do_handshake(my_id, info_hash)
             except (PeerHandshakeFailed, PeerDisconnected):
                 logging.getLogger('BitTorrent').info(f'Failed handshaking peer {peer}')
-                self.peers.remove(peer)
+                self.remove_peer(peer)
 
         self.peers = connected_peers
         logging.getLogger('BitTorrent').info(f'Total peers connected: {len(self.peers)}')
@@ -69,7 +70,7 @@ class PeersManager:
         try:
             message = peer.receive_message()
         except PeerDisconnected:
-            self.peers.remove(peer)
+            self.remove_peer(peer)
             return self.receive_message()
 
         return peer, message

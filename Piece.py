@@ -54,14 +54,14 @@ def create_pieces(file_size, piece_size) -> List[Piece]:
     pieces_amount = int(file_size / piece_size)
 
     # Generate pieces
-    for i in range(pieces_amount - 1):
+    for i in range(pieces_amount):
         piece = Piece(i, piece_size)
         pieces.append(piece)
 
     last_piece_size = file_size % piece_size
 
     if last_piece_size:
-        last_piece = Piece(pieces_amount - 1, last_piece_size)
+        last_piece = Piece(pieces_amount, last_piece_size)
         pieces.append(last_piece)
 
     return pieces

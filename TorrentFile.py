@@ -14,6 +14,7 @@ class TorrentFile:
         self.info = self.config['info']
         self.hash = hashlib.sha1(bencode(self.info)).digest()
         self.piece_size = self.config['info']['piece length']
+        self.file_name = self.config['info']['name']
         self.length = 0
         self.print_configuration()
         torrent.close()

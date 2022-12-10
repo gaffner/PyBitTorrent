@@ -6,7 +6,7 @@ import struct
 from bitstring import BitArray
 
 from Exceptions import PeerConnectionFailed, PeerDisconnected
-from Message import Message, Handshake, BitField
+from Message import Message, Handshake, BitField, HaveMessage
 from MessageFactory import MessageFactory
 
 HANDSHAKE_STRIPPED_SIZE = 48
@@ -59,6 +59,12 @@ class Peer:
     def set_bitfield(self, bitfield: BitField):
         self.bitfield = bitfield.bitfield
 
+    def set_have(self, have: HaveMessage):
+        if have.index < self.bitfield.length:
+            self.bitfield[have.index] = True
+        else:
+            logging.getLogger('BitTorrent').critical(f'Have message {have.index} smaller then {self.bitfield.length}')
+
     def receive_message(self) -> Message:
         # After handshake
         try:
@@ -93,7 +99,7 @@ class Peer:
         message_bytes = message.to_bytes()
         try:
             self.socket.send(message_bytes)
-        except WindowsError:
+        except OSError:
             raise PeerDisconnected
 
     def set_unchoke(self, _):

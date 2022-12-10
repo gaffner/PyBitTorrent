@@ -12,8 +12,8 @@ class BlockStatus(Enum):
 
 
 class Block:
-    default_size = parse_size('16KB')
-    max_waiting_time = 5
+    default_size = 16384
+    max_waiting_time = 7  # 5 seconds
 
     def __init__(self, offset, size=default_size):
         self.status = BlockStatus.FREE
@@ -48,7 +48,7 @@ def create_blocks(piece_size) -> List[Block]:
 
     # The size of the last block will be the left over
     if last_block_size:
-        last_block = Block(blocks_amount, last_block_size)
+        last_block = Block(blocks_amount * Block.default_size, last_block_size)
         blocks.append(last_block)
 
     return blocks

@@ -132,6 +132,20 @@ class PieceMessage(Message):
         pass
 
 
+class HaveMessage(Message):
+    def __init__(self, index):
+        self.index = index
+
+    @staticmethod
+    def from_bytes(payload):
+        index = struct.unpack('>I', payload)[0]
+
+        return HaveMessage(index)
+
+    def to_bytes(self) -> bytes:
+        pass
+
+
 class UnknownMessage(Message):
     def __init__(self, _id):
         self.id = _id
@@ -154,4 +168,4 @@ class KeepAlive(Message):
 
 
 # Use for typing
-MessageTypes = Union[Message, Handshake, Request, PieceMessage, BitField, Unchoke, UnknownMessage]
+MessageTypes = Union[Message, Handshake, Request, PieceMessage, BitField, HaveMessage, Unchoke, UnknownMessage]
