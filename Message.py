@@ -2,6 +2,7 @@ import enum
 import struct
 from abc import ABC, abstractmethod
 from typing import Union
+import os
 
 from bitstring import BitArray
 
@@ -177,5 +178,5 @@ class KeepAlive(Message):
         pass
 
 
-# Use for typing
+# Used for typing
 MessageTypes = Union[Message, Handshake, Request, PieceMessage, BitField, HaveMessage, Unchoke, UnknownMessage]

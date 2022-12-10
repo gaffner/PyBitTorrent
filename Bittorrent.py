@@ -58,7 +58,7 @@ class BitTorrentClient:
         self.pieces = create_pieces(file_size, piece_size)
         self.number_of_pieces = len(self.pieces)
 
-        self.use_progress_bar = True
+        self.use_progress_bar = False
 
     def start(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
@@ -83,7 +83,8 @@ class BitTorrentClient:
         print("GoodBye!")
 
     def progress_download(self):
-        for _ in track(range(len(self.pieces)), description=f"Downloading {self.torrent.file_name}"):
+        # for _ in track(range(len(self.pieces)), description=f"Downloading {self.torrent.file_name}"):
+        for _ in range(len(self.pieces)):
             self.handle_messages()
 
     def handle_messages(self):
@@ -91,7 +92,7 @@ class BitTorrentClient:
             try:
                 peer, message = self.peer_manager.receive_message()
                 # print("Got:", type(message))
-            except struct.error as e:
+            except OSError as e:
                 logging.getLogger('BitTorrent').critical(f'error: {e}')
                 continue
 
@@ -185,7 +186,7 @@ class BitTorrentClient:
             block = piece.get_block_by_offset(pieceMessage.offset)
             block.data = pieceMessage.data
             block.status = BlockStatus.FULL
-            logging.getLogger('BitTorrent').debug(f'Successfully got some block of piece {piece.index}')
+            # logging.getLogger('BitTorrent').debug(f'Successfully got some block of piece {piece.index}')
             # print("Got block of piece", pieceMessage.index)
 
             if piece.is_full():

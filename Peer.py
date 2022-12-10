@@ -36,7 +36,7 @@ class Peer:
         Connect to the target client
         """
         try:
-            # self.socket.settimeout()
+            self.socket.settimeout(2)
             # self.socket.gettimeout()
             self.socket.connect((self.ip, self.port))
         except socket.error as e:
@@ -71,7 +71,7 @@ class Peer:
         # After handshake
         try:
             packet_length = self.socket.recv(1)
-        except WindowsError:
+        except OSError:
             raise PeerDisconnected
 
         if packet_length == b'':
@@ -81,14 +81,24 @@ class Peer:
 
         if self.connected:
             packet_length = packet_length + self.socket.recv(3)
-            length = struct.unpack('>I', packet_length)[0]  # Big endian integer
+
+            while len(packet_length) < 4:
+                odd = 4 - len(packet_length)
+                packet_length = packet_length + self.socket.recv(odd)
+                print("SETTING SIZE AGAIN...................")
+
+            try:
+                length = struct.unpack('>I', packet_length)[0]  # Big endian integer
+            except struct.error:
+                print("The packet length:", packet_length)
+                raise struct.error
             data = self.socket.recv(length)
 
             while len(data) != length:
                 odd = length - len(data)
                 data += self.socket.recv(odd)
 
-            logging.getLogger('BitTorrent').debug(f"packet length: {length}")
+            # logging.getLogger('BitTorrent').debug(f"packet length: {length}")
             return MessageFactory.create_message(data)
             # message = MessageFactory.create_message(data)
             # if message.should_wait_for_data():

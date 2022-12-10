@@ -29,7 +29,6 @@ class HTTPTracker(Tracker):
 
         peers = []
 
-        # TODO: check if the response is in compact mode
         if 'peers' in tracker_response or 'peers6' in tracker_response:
             peers_key = 'peers'
             if 'peers6' in tracker_response:
