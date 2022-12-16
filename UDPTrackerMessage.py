@@ -1,5 +1,6 @@
 import struct
 import random
+import logging
 
 DEFAULT_CONNECTION_ID = 0x41727101980
 CONNECT = 0
@@ -69,4 +70,8 @@ class AnnounceResult:
 
     @staticmethod
     def from_bytes(payload):
-        return AnnounceResult(*struct.unpack('>IIIII', payload[:20]), payload[20:])
+        if len(payload) >= 20:
+            return AnnounceResult(*struct.unpack('>IIIII', payload[:20]), payload[20:])
+        else:
+            return AnnounceResult(*struct.unpack('>II', payload[:8]), 0, 0, [])  # No peers
+            logging.getLogger('BitTorrent').error("Tracker error:", payload[8:])

@@ -20,6 +20,8 @@ class Tracker(ABC):
         # TODO: write new compact mode
         offset = 0
         peers = []
+        if not peers_bytes:
+            return []
 
         for _ in range(len(peers_bytes) // 6):
             ip = struct.unpack_from("!i", peers_bytes, offset)[0]
