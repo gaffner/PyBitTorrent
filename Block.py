@@ -22,6 +22,10 @@ class Block:
         self.data = b''
         self.time_requested = 0  # Used for determine block status
 
+    def set_requested(self):
+        self.time_requested = time.time()
+        self.status = BlockStatus.REQUESTED
+
     def calculate_status(self):
         """
         Check if the block status should change from

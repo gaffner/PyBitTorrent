@@ -1,27 +1,20 @@
 import logging
 import socket
-import struct
 import time
-from copy import deepcopy
 from threading import Thread
 from typing import List
 
-import rich
-from bcoding import bdecode, bencode
-
-import Utils
 from Block import BlockStatus
-from Exceptions import PieceIsPending, NoPeersHavePiece, NoPieceFound, PeerDisconnected, PieceIsFull
-from Message import Handshake, KeepAlive, BitField, Unchoke, Request, PieceMessage, HaveMessage
+from Exceptions import PieceIsPending, NoPeersHavePiece, NoPieceFound, PeerDisconnected, PieceIsFull, OutOfPeers, \
+    AllPeersChocked
+from Message import Handshake, KeepAlive, BitField, Unchoke, Request, PieceMessage, HaveMessage, Choke
 from PeersManager import PeersManager
 from Piece import Piece, create_pieces
 from PiecesManager import PieceManager
+from TorrentFile import TorrentFile
 from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
 from Utils import generate_peer_id, read_peers_from_file
-import multiprocessing
-from TorrentFile import TorrentFile
-from rich.progress import track
 
 LISTENING_PORT = 6881
 MAX_LISTENING_PORT = 6889
@@ -74,12 +67,16 @@ class BitTorrentClient:
         logging.getLogger('BitTorrent').critical(f"Number of peers: {len(peers)}")
 
         self.peer_manager.add_peers(peers)
-        self.peer_manager.send_handshake(self.id, self.torrent.hash)  # Connect the peers
-
+        handshakes = Thread(target=self.peer_manager.send_handshakes, args=(self.id, self.torrent.hash))
         requester = Thread(target=self.piece_requester)
+
+        handshakes.start()
         requester.start()
 
         self.progress_download()
+
+        handshakes.join()
+        requester.join()
         print("GoodBye!")
 
     def progress_download(self):
@@ -91,9 +88,9 @@ class BitTorrentClient:
         while not self._all_pieces_full():
             try:
                 peer, message = self.peer_manager.receive_message()
-                # print("Got:", type(message))
-            except OSError as e:
-                logging.getLogger('BitTorrent').critical(f'error: {e}')
+            except OutOfPeers:
+                logging.getLogger('BitTorrent').error(f"No peers found, sleep for 2 seconds")
+                time.sleep(2)
                 continue
 
             if type(message) is Handshake:
@@ -109,11 +106,16 @@ class BitTorrentClient:
             elif type(message) is KeepAlive:
                 logging.getLogger('BitTorrent').debug(f'Got keep alive from {peer}')
 
+            elif type(message) is Choke:
+                logging.getLogger('BitTorrent').info(f'Got choke from {peer} :(')
+                peer.set_choked()
+
             elif type(message) is Unchoke:
                 logging.getLogger('BitTorrent').info(f'Got unchoke from {peer}')
-                peer.set_unchoke(Unchoke)
+                peer.set_unchoked()
 
             elif type(message) is PieceMessage:
+                # print("Got piece!", message)
                 if self.handle_piece(message):
                     return
 
@@ -130,7 +132,7 @@ class BitTorrentClient:
 
         while self.should_continue:
             self.request_current_block()
-            time.sleep(0.0001)
+            time.sleep(0.1)
 
         logging.getLogger('BitTorrent').critical(f'Exiting the requesting loop...')
         self.piece_manager.close()
@@ -142,6 +144,7 @@ class BitTorrentClient:
                 peer = self.peer_manager.get_random_peer_by_piece(piece)
                 request = Request(piece.index, block.offset, block.size)
                 peer.send_message(request)
+                block.set_requested()
                 return
 
             except PieceIsPending:
@@ -153,8 +156,14 @@ class BitTorrentClient:
                 continue
 
             except NoPeersHavePiece:
-                # logging.getLogger('BitTorrent').debug(f'No peers have piece {piece.index}')
-                pass
+                logging.getLogger('BitTorrent').debug(f'No peers have piece {piece.index}')
+                time.sleep(2.5)
+
+            except AllPeersChocked:
+                logging.getLogger('BitTorrent').debug(f'All of '
+                                                      f'{len(self.peer_manager.connected_peers)} peers is chocked')
+                time.sleep(2.5)
+
             except PeerDisconnected:
                 logging.getLogger('BitTorrent').error(f'Peer {peer} disconnected when requesting for piece')
                 self.peer_manager.remove_peer(peer)
@@ -176,6 +185,7 @@ class BitTorrentClient:
 
         raise NoPieceFound
 
+
     def handle_piece(self, pieceMessage: PieceMessage):
         try:
             if len(pieceMessage.data) == 0:
@@ -193,8 +203,11 @@ class BitTorrentClient:
                 self.piece_manager.write_piece(piece, self.torrent.piece_size)
                 self.pieces.remove(piece)
                 if not self.use_progress_bar:
-                    print("Progress: {have}/{total}".format(have=self.piece_manager.written,
-                                                            total=self.number_of_pieces))
+                    print("Progress: {have}/{total} Unchoked peers: {peers_have}/{total_peers}".format(
+                        have=self.piece_manager.written,
+                        total=self.number_of_pieces, peers_have=self.peer_manager.num_of_unchoked,
+                        total_peers=len(self.peer_manager.connected_peers)))
+
                 del piece
                 return True
 

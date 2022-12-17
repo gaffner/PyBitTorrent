@@ -1,0 +1,3 @@
+f = open("peers", "wb")
+f.write('\n'.join([f'{peer.ip}:{peer.port}' for peer in peers]).encode())
+f.close()

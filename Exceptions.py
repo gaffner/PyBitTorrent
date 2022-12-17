@@ -40,3 +40,6 @@ class NoPieceFound(BasicException):
 
 class NoPeersHavePiece(BasicException):
     pass
+
+class AllPeersChocked(BasicException):
+    pass

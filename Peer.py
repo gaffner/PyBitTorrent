@@ -5,7 +5,7 @@ import struct
 
 from bitstring import BitArray
 
-from Exceptions import PeerConnectionFailed, PeerDisconnected
+from Exceptions import PeerConnectionFailed, PeerDisconnected, PeerHandshakeFailed
 from Message import Message, Handshake, BitField, HaveMessage
 from MessageFactory import MessageFactory
 
@@ -36,9 +36,12 @@ class Peer:
         Connect to the target client
         """
         try:
-            self.socket.settimeout(1)
-            # self.socket.gettimeout()
+            test_sock = socket.socket(self.socket.family, self.socket.type)
+            test_sock.settimeout(2)
+            test_sock.connect((self.ip, self.port))
+
             self.socket.connect((self.ip, self.port))
+
         except socket.error as e:
             raise PeerConnectionFailed(f"Failed to connect: {str(e)}")
 
@@ -51,12 +54,14 @@ class Peer:
 
         self.socket.send(handshake_bytes)
 
-    def verify_handshake(self, handshake) -> bool:
+        response = self.receive_message()
+        self.verify_handshake(response)
+
+    def verify_handshake(self, handshake):
         if self.handshake == handshake:
             self.connected = True
-            return True
-
-        return False
+        else:
+            raise PeerHandshakeFailed
 
     def set_bitfield(self, bitfield: BitField):
         self.bitfield = bitfield.bitfield
@@ -75,7 +80,7 @@ class Peer:
             raise PeerDisconnected
 
         if packet_length == b'':
-            logging.getLogger('BitTorrent').error(f'Client in ip {self.ip} with id {self.id} disconnected')
+            # logging.getLogger('BitTorrent').debug(f'Client in ip {self.ip} with id {self.id} disconnected')
             self.socket.close()
             raise PeerDisconnected
 
@@ -107,8 +112,8 @@ class Peer:
 
         # Before handshake
         else:
-            logging.getLogger('BitTorrent').debug(
-                f'Receiving handshake response from {self.id} with length {packet_length}')
+            # logging.getLogger('BitTorrent').debug(
+                # f'Receiving handshake response from {self.id} with length {packet_length}')
             protocol_len: int = struct.unpack('>B', packet_length)[0]
             handshake_bytes = self.socket.recv(protocol_len + HANDSHAKE_STRIPPED_SIZE)
 
@@ -116,13 +121,18 @@ class Peer:
 
     def send_message(self, message: Message):
         # logging.getLogger('BitTorrent').debug(f'Sending message {type(message)} to {self}')
+        if not self.connected:
+            pass
         message_bytes = message.to_bytes()
         try:
             self.socket.send(message_bytes)
         except OSError:
             raise PeerDisconnected
 
-    def set_unchoke(self, _):
+    def set_choked(self):
+        self.is_choked = True
+
+    def set_unchoked(self):
         self.is_choked = False
 
     def have_piece(self, piece):

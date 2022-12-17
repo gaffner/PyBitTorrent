@@ -2,7 +2,6 @@ import enum
 import struct
 from abc import ABC, abstractmethod
 from typing import Union
-import os
 
 from bitstring import BitArray
 
@@ -39,6 +38,22 @@ class Message(ABC):
         check if should wait until it's full
         """
         return False
+
+
+class Choke(Message):
+    def __init__(self):
+        self.id = MessageCode.CHOKE
+        self.length = 5
+
+    def to_bytes(self) -> bytes:
+        return struct.pack('>IB',
+                           self.length,
+                           self.id)
+
+    @staticmethod
+    def from_bytes(payload):
+        # The unchoke message contains no relevant values...
+        return Unchoke()
 
 
 class Unchoke(Message):
@@ -92,6 +107,9 @@ class Handshake(Message):
 
     @staticmethod
     def from_bytes(payload: bytes):
+        if len(payload) != 68:
+            print("Payload error:", payload)
+            return b''
         protocol_len = struct.unpack('>B', payload[:1])[0]
         protocol, reserved, info_hash, peer_id = struct.unpack(f'>{protocol_len}s8s20s20s', payload[1:])
 
@@ -128,6 +146,9 @@ class PieceMessage(Message):
         self.index = index
         self.offset = offset
         self.data = data
+
+    def __str__(self):
+        return f'[index: {self.index}, offset: {self.offset}]'
 
     @staticmethod
     def from_bytes(payload):

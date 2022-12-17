@@ -25,8 +25,6 @@ class Piece:
         for block in self.blocks:
             block.calculate_status()
             if block.status == BlockStatus.FREE:
-                block.time_requested = time.time()
-                block.status = BlockStatus.REQUESTED
                 return block
 
         if self.is_full():
