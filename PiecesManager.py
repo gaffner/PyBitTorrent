@@ -18,5 +18,5 @@ class PieceManager:
         self.written += 1
 
     def close(self):
-        print("Closing the file")
+        print("\nClosing the file")
         self.file.close()

@@ -4,6 +4,7 @@ import time
 from threading import Thread
 from typing import List
 
+import Utils
 from Block import BlockStatus
 from Exceptions import PieceIsPending, NoPeersHavePiece, NoPieceFound, PeerDisconnected, PieceIsFull, OutOfPeers, \
     AllPeersChocked
@@ -15,16 +16,19 @@ from TorrentFile import TorrentFile
 from TrackerFactory import TrackerFactory
 from TrackerManager import TrackerManager
 from Utils import generate_peer_id, read_peers_from_file
+from rich import progress
+import colorama
 
 LISTENING_PORT = 6881
 MAX_LISTENING_PORT = 6889
+MAX_PEERS = 12
 REQUEST_INTERVAL = 0.2
 
 
 class BitTorrentClient:
 
-    def __init__(self, torrent, peers_file=None):
-        self.peer_manager: PeersManager = PeersManager()
+    def __init__(self, torrent, max_peers=MAX_PEERS, no_progress_bar=False, peers_file=None):
+        self.peer_manager: PeersManager = PeersManager(max_peers)
         self.tracker_manager: TrackerManager
         self.id: bytes = generate_peer_id()
         self.listener_socket: socket.socket = socket.socket()
@@ -32,6 +36,7 @@ class BitTorrentClient:
         self.peers_file = peers_file
         self.pieces: List[Piece] = []
         self.should_continue = True
+        self.use_progress_bar = not no_progress_bar
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
         self.piece_manager = PieceManager('{}.written'.format(self.torrent.file_name))
@@ -51,7 +56,6 @@ class BitTorrentClient:
         self.pieces = create_pieces(file_size, piece_size)
         self.number_of_pieces = len(self.pieces)
 
-        self.use_progress_bar = False
 
     def start(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
@@ -73,54 +77,64 @@ class BitTorrentClient:
         handshakes.start()
         requester.start()
 
-        self.progress_download()
 
+        self.progress_download()
         handshakes.join()
+        print("---------------------Done---------------------")
         requester.join()
         print("GoodBye!")
 
     def progress_download(self):
-        # for _ in track(range(len(self.pieces)), description=f"Downloading {self.torrent.file_name}"):
-        for _ in range(len(self.pieces)):
-            self.handle_messages()
+        if self.use_progress_bar:
+            for _ in progress.track(range(len(self.pieces)), description=f"Downloading {self.torrent.file_name}"):
+                self.handle_messages()
+        else:
+            for _ in range(len(self.pieces)):
+                self.handle_messages()
 
     def handle_messages(self):
         while not self._all_pieces_full():
             try:
-                peer, message = self.peer_manager.receive_message()
+                # Utils.console.print(f'[purple]Waiting for message...')
+                messages = self.peer_manager.receive_messages()
             except OutOfPeers:
                 logging.getLogger('BitTorrent').error(f"No peers found, sleep for 2 seconds")
                 time.sleep(2)
                 continue
+            except socket.error as e:
+                logging.getLogger('BitTorrent').critical(f"Unknown socket error: {e}")
+                continue
 
-            if type(message) is Handshake:
-                peer.verify_handshake(message)
+            for peer, message in messages.items():
+                if type(message) is Handshake:
+                    peer.verify_handshake(message)
 
-            elif type(message) is BitField:
-                logging.getLogger('BitTorrent').info(f'Got bitfield from {peer}')
-                peer.set_bitfield(message)
+                elif type(message) is BitField:
+                    logging.getLogger('BitTorrent').info(f'Got bitfield from {peer}')
+                    peer.set_bitfield(message)
 
-            elif type(message) is HaveMessage:
-                peer.set_have(message)
+                elif type(message) is HaveMessage:
+                    peer.set_have(message)
 
-            elif type(message) is KeepAlive:
-                logging.getLogger('BitTorrent').debug(f'Got keep alive from {peer}')
+                elif type(message) is KeepAlive:
+                    logging.getLogger('BitTorrent').debug(f'Got keep alive from {peer}')
 
-            elif type(message) is Choke:
-                logging.getLogger('BitTorrent').info(f'Got choke from {peer} :(')
-                peer.set_choked()
+                elif type(message) is Choke:
+                    print(f"Got choke from {peer}")
+                    # Utils.console.print(f'[orange]Got choke from {peer} :(')
+                    peer.set_choked()
 
-            elif type(message) is Unchoke:
-                logging.getLogger('BitTorrent').info(f'Got unchoke from {peer}')
-                peer.set_unchoked()
+                elif type(message) is Unchoke:
+                    Utils.console.print(f'[red]Client unchoked {peer}')
+                    peer.set_unchoked()
 
-            elif type(message) is PieceMessage:
-                # print("Got piece!", message)
-                if self.handle_piece(message):
-                    return
+                elif type(message) is PieceMessage:
+                    # print("Got piece!", message)
+                    if self.handle_piece(message):
+                        return
 
-            else:
-                logging.getLogger('BitTorrent').error(f'Unknown message: {message.id}')  # should be error
+                else:
+                    logging.getLogger('BitTorrent').error(f'Unknown message: {message.id}')  # should be error
 
     def piece_requester(self):
         """
@@ -132,7 +146,7 @@ class BitTorrentClient:
 
         while self.should_continue:
             self.request_current_block()
-            time.sleep(0.1)
+            time.sleep(0.001)
 
         logging.getLogger('BitTorrent').critical(f'Exiting the requesting loop...')
         self.piece_manager.close()
@@ -152,7 +166,7 @@ class BitTorrentClient:
                 continue
 
             except PieceIsFull:
-                logging.getLogger('BitTorrent').debug(f'All blocks of piece {piece.index} are full, writing to disk...')
+                # logging.getLogger('BitTorrent').debug(f'All blocks of piece {piece.index} are full, writing to disk...')
                 continue
 
             except NoPeersHavePiece:
@@ -203,7 +217,7 @@ class BitTorrentClient:
                 self.piece_manager.write_piece(piece, self.torrent.piece_size)
                 self.pieces.remove(piece)
                 if not self.use_progress_bar:
-                    print("Progress: {have}/{total} Unchoked peers: {peers_have}/{total_peers}".format(
+                    Utils.console.print("[green]Progress: {have}/{total} Unchoked peers: {peers_have}/{total_peers}".format(
                         have=self.piece_manager.written,
                         total=self.number_of_pieces, peers_have=self.peer_manager.num_of_unchoked,
                         total_peers=len(self.peer_manager.connected_peers)))
@@ -215,7 +229,7 @@ class BitTorrentClient:
             logging.getLogger('BitTorrent').debug(f'Piece {pieceMessage.index} is pending')
 
         except NoPieceFound:
-            logging.getLogger('BitTorrent').debug(f'Piece {pieceMessage.index} not found')
-            # import ipdb; ipdb.set_trace(context=25)
+            # logging.getLogger('BitTorrent').debug(f'Piece {pieceMessage.index} not found')
+            pass
 
         return False

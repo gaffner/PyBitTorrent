@@ -1,10 +1,12 @@
 import ipaddress
 import logging
+import random
 import socket
 import struct
 
 from bitstring import BitArray
 
+import Utils
 from Exceptions import PeerConnectionFailed, PeerDisconnected, PeerHandshakeFailed
 from Message import Message, Handshake, BitField, HaveMessage
 from MessageFactory import MessageFactory
@@ -74,49 +76,48 @@ class Peer:
 
     def receive_message(self) -> Message:
         # After handshake
+        # myid = random.randint(0, 65536)
         try:
+            # print(f"{myid} Waiting for {self}")
             packet_length = self.socket.recv(1)
+
         except OSError:
             raise PeerDisconnected
 
         if packet_length == b'':
             # logging.getLogger('BitTorrent').debug(f'Client in ip {self.ip} with id {self.id} disconnected')
             self.socket.close()
+            # print(f"{myid}done")
             raise PeerDisconnected
 
         if self.connected:
             packet_length = packet_length + self.socket.recv(3)
-
             while len(packet_length) < 4:
                 odd = 4 - len(packet_length)
                 packet_length = packet_length + self.socket.recv(odd)
-                print("SETTING SIZE AGAIN...................")
+                logging.getLogger('BitTorrent').error(f"[yellow]Setting size again in {self}, length: {packet_length}")
+                # print('.')
 
             try:
                 length = struct.unpack('>I', packet_length)[0]  # Big endian integer
             except struct.error:
-                print("The packet length:", packet_length)
+                # print(f"{myid}The packet length:", packet_length)
                 raise struct.error
             data = self.socket.recv(length)
 
             while len(data) != length:
                 odd = length - len(data)
                 data += self.socket.recv(odd)
+                # print('.')
 
-            # logging.getLogger('BitTorrent').debug(f"packet length: {length}")
+#             # print(f"{myid}done")
             return MessageFactory.create_message(data)
-            # message = MessageFactory.create_message(data)
-            # if message.should_wait_for_data():
-            #     print("Waiting for data...")
 
-
-        # Before handshake
         else:
-            # logging.getLogger('BitTorrent').debug(
-                # f'Receiving handshake response from {self.id} with length {packet_length}')
             protocol_len: int = struct.unpack('>B', packet_length)[0]
             handshake_bytes = self.socket.recv(protocol_len + HANDSHAKE_STRIPPED_SIZE)
 
+            # print(f"{myid}done")
             return MessageFactory.create_handshake_message(packet_length + handshake_bytes)
 
     def send_message(self, message: Message):

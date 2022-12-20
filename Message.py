@@ -43,7 +43,7 @@ class Message(ABC):
 class Choke(Message):
     def __init__(self):
         self.id = MessageCode.CHOKE
-        self.length = 5
+        self.length = 1
 
     def to_bytes(self) -> bytes:
         return struct.pack('>IB',
@@ -59,7 +59,7 @@ class Choke(Message):
 class Unchoke(Message):
     def __init__(self):
         self.id = MessageCode.UNCHOKE
-        self.length = 5
+        self.length = 1
 
     def to_bytes(self) -> bytes:
         return struct.pack('>IB',
@@ -192,7 +192,7 @@ class UnknownMessage(Message):
 
 class KeepAlive(Message):
     def to_bytes(self) -> bytes:
-        pass
+        return struct.pack('I', 0)
 
     @staticmethod
     def from_bytes(payload):

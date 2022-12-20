@@ -1,3 +1,4 @@
 f = open("peers", "wb")
-f.write('\n'.join([f'{peer.ip}:{peer.port}' for peer in peers]).encode())
+data = '\n'.join([f'{peer.ip}:{peer.port}' for peer in peers]).encode()
+f.write(data); print(data)
 f.close()

@@ -4,19 +4,19 @@ import random
 import select
 import socket
 import threading
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 from Exceptions import PeerConnectionFailed, PeerDisconnected, OutOfPeers, NoPeersHavePiece, PeerHandshakeFailed, \
     AllPeersChocked
 from Message import MessageTypes
 from Peer import Peer
 
-MAX_CONNECTED_PEERS = 40  # we are doing this because in the current status we are doing sync-check of the sockets
 MAX_HANDSHAKE_THREADS = 80
 
 
 class PeersManager:
-    def __init__(self):
+    def __init__(self, max_peers):
+        self.max_peers = max_peers
         self.peers: List[Peer] = []
         self.connected_peers: List[Peer] = []
 
@@ -25,7 +25,7 @@ class PeersManager:
 
     def remove_peer(self, peer):
         # logging.getLogger('BitTorrent').debug(f'Removing peer {peer}')
-        if peer in self.peers:
+        if peer in self.connected_peers:
             self.connected_peers.remove(peer)
 
     def add_peer(self, peer: Peer):
@@ -48,7 +48,7 @@ class PeersManager:
             self.connected_peers.append(peer)
 
             # logging.getLogger('BitTorrent').info(f'Success in handshaking peer {peer}')
-            print(f"Adding peer {peer} which is {len(self.connected_peers)}/{MAX_CONNECTED_PEERS}")
+            logging.getLogger('BitTorrent').debug(f"Adding peer {peer} which is {len(self.connected_peers)}/{self.max_peers}")
 
         except (PeerHandshakeFailed, PeerDisconnected, socket.error):
             # logging.getLogger('BitTorrent').debug(f'Failed handshaking peer {peer}')
@@ -67,7 +67,7 @@ class PeersManager:
         # if number_of_polls * MAX_HANDSHAKE_THREADS > len(handshake_threads):
         #     number_of_polls = int(len(handshake_threads) / MAX_HANDSHAKE_THREADS) + 1
 
-        for i in range(1, number_of_polls):
+        for i in range(1, number_of_polls+1):
             logging.getLogger('BitTorrent').debug(f'Poll number {i}/{number_of_polls}')
             poll = handshake_threads[:MAX_HANDSHAKE_THREADS]
 
@@ -79,18 +79,16 @@ class PeersManager:
             for thread in poll:
                 thread.join()
 
-            if len(self.connected_peers) >= MAX_CONNECTED_PEERS:
-                logging.getLogger('BitTorrent').info(f'Reached max connected peers of {MAX_CONNECTED_PEERS}')
+            if len(self.connected_peers) >= self.max_peers:
+                logging.getLogger('BitTorrent').info(f'Reached max connected peers of {self.max_peers}')
                 break
 
             # Slice the handshake threads
             del handshake_threads[:MAX_HANDSHAKE_THREADS]
 
         logging.getLogger('BitTorrent').info(f'Total peers connected: {len(self.connected_peers)}')
-        if len(self.connected_peers) == 0:
-            raise OutOfPeers
 
-    def receive_message(self) -> Tuple[Peer, MessageTypes]:
+    def receive_messages(self) -> Dict[Peer, MessageTypes]:
         """
         Receive new messages from clients
         """
@@ -102,26 +100,28 @@ class PeersManager:
 
         # TODO: peer should inherit from socket, so just pass self.peers to select
         sockets = [peer.socket for peer in self.connected_peers]
-        readable, _, _ = select.select(sockets, [], [])
+        # print("Waiting for readables...")
+        readables, _, _ = select.select(sockets, [], [])
+        # print("done")
+        # print("Readable:", readable)
 
-        peer = None
+        peers_to_message = {}
         for _peer in self.connected_peers:
-            if _peer.socket == readable[0]:
-                peer = _peer
+            for readable in readables:
+                if _peer.socket == readable:
+                    peers_to_message[_peer] = None
 
-        if not peer:
-            raise NotImplemented
+        for peer in peers_to_message:
+            try:
+                message = peer.receive_message()
+                peers_to_message[peer] = message
+            except PeerDisconnected:
+                logging.getLogger('BitTorrent').debug(f'Peer {peer} while waiting for message')
+                self.remove_peer(peer)
+                return self.receive_messages()
 
-        # logging.getLogger('BitTorrent').debug(f'Choosing peer at index 0: {peer}')
-
-        try:
-            message = peer.receive_message()
-        except PeerDisconnected:
-            logging.getLogger('BitTorrent').debug(f'Peer {peer} while waiting for message')
-            self.remove_peer(peer)
-            return self.receive_message()
-
-        return peer, message
+        # print("Messages length:", len(peers_to_message))
+        return peers_to_message
 
     def get_random_peer_by_piece(self, piece):
         peers_have_piece = []

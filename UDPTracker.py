@@ -46,8 +46,7 @@ class UDPTracker(Tracker):
                 logging.getLogger('BitTorrent').error("UDP Tracker request and response are not equal")
 
             peers = Tracker.extract_compact_peers(announce_response.peers)
-            logging.getLogger('BitTorrent').critical(f'success in scraping {self.url} got {len(peers)} peers, raw:'
-                                                     f'{announce_response.peers}')
+            logging.getLogger('BitTorrent').critical(f'success in scraping {self.url} got {len(peers)} peers')
             return peers
 
         except socket.error:
