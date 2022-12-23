@@ -39,6 +39,7 @@ LISTENING_PORT = 6881
 MAX_LISTENING_PORT = 6889
 MAX_PEERS = 12
 REQUEST_INTERVAL = 0.2
+ITERATION_SLEEP_INTERVAL = 0.001
 
 
 class BitTorrentClient:
@@ -57,7 +58,6 @@ class BitTorrentClient:
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
         self.piece_manager = DiskManager("{}.written".format(self.torrent.file_name))
-        # Utils.show_downloading_progress(None, None)
         # create tracker for each url of tracker in the config file
         trackers = []
         if "announce" in self.torrent.config:
@@ -96,11 +96,10 @@ class BitTorrentClient:
 
         handshakes.start()
         requester.start()
-        print("---------------------Done---------------------")
         self.progress_download()
         handshakes.join()
         requester.join()
-        print("GoodBye!")
+        Utils.console.print("[green]GoodBye!")
 
     def progress_download(self):
         if self.use_progress_bar:
@@ -116,7 +115,7 @@ class BitTorrentClient:
     def handle_messages(self):
         while not self._all_pieces_full():
             try:
-                # Utils.console.print(f'[purple]Waiting for message...')
+                # Utils.console.print.f'[purple]Waiting for message...')
                 messages = self.peer_manager.receive_messages()
             except OutOfPeers:
                 logging.getLogger("BitTorrent").error(
@@ -143,16 +142,13 @@ class BitTorrentClient:
                     logging.getLogger("BitTorrent").debug(f"Got keep alive from {peer}")
 
                 elif type(message) is Choke:
-                    print(f"Got choke from {peer}")
-                    # Utils.console.print(f'[orange]Got choke from {peer} :(')
                     peer.set_choked()
 
                 elif type(message) is Unchoke:
-                    Utils.console.print(f"[red]Client unchoked {peer}")
                     peer.set_unchoked()
 
                 elif type(message) is PieceMessage:
-                    # print("Got piece!", message)
+                    # "Got piece!", message)
                     if self.handle_piece(message):
                         return
 
@@ -171,7 +167,7 @@ class BitTorrentClient:
 
         while self.should_continue:
             self.request_current_block()
-            time.sleep(0.001)
+            time.sleep(ITERATION_SLEEP_INTERVAL) # wait between each piece request
 
         logging.getLogger("BitTorrent").critical(f"Exiting the requesting loop...")
         self.piece_manager.close()
@@ -187,7 +183,6 @@ class BitTorrentClient:
                 return
 
             except PieceIsPending:
-                # logging.getLogger('BitTorrent').debug(f'Piece {piece} is pending')
                 continue
 
             except PieceIsFull:
@@ -234,16 +229,15 @@ class BitTorrentClient:
 
     def handle_piece(self, pieceMessage: PieceMessage):
         try:
-            if len(pieceMessage.data) == 0:
-                print("Empty piece:", pieceMessage.index)
+            if not len(pieceMessage.data):
+                logging.getLogger("BitTorrent").debug("Empty piece:", pieceMessage.index)
                 return
 
             piece = self._get_piece_by_index(pieceMessage.index)
             block = piece.get_block_by_offset(pieceMessage.offset)
             block.data = pieceMessage.data
             block.status = BlockStatus.FULL
-            # logging.getLogger('BitTorrent').debug(f'Successfully got some block of piece {piece.index}')
-            # print("Got block of piece", pieceMessage.index)
+            logging.getLogger('BitTorrent').debug(f'Successfully got block of piece {piece.index}')
 
             if piece.is_full():
                 self.piece_manager.write_piece(piece, self.torrent.piece_size)
@@ -267,7 +261,6 @@ class BitTorrentClient:
             )
 
         except NoPieceFound:
-            # logging.getLogger('BitTorrent').debug(f'Piece {pieceMessage.index} not found')
             pass
 
         return False

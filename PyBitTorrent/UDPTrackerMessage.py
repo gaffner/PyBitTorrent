@@ -101,5 +101,4 @@ class AnnounceResult:
         else:
             return AnnounceResult(
                 *struct.unpack(">II", payload[:8]), 0, 0, []
-            )  # No peers
-            logging.getLogger("BitTorrent").error("Tracker error:", payload[8:])
+            )

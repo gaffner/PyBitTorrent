@@ -11,7 +11,7 @@ class BlockStatus(Enum):
 
 class Block:
     default_size = 16384
-    max_waiting_time = 7  # 5 seconds
+    max_waiting_time = 7
 
     def __init__(self, offset, size=default_size):
         self.status = BlockStatus.FREE

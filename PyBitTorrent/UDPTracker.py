@@ -13,6 +13,12 @@ RECEIVE_SIZE = 16384
 
 class UDPTracker(Tracker):
     def get_peers(self, peer_id: bytes, port: int, torrent: TorrentFile) -> List[Peer]:
+        """
+        Connect to udp tracker and retrieve from him list of peers. Following the
+        BitTorrent UDP Tracker specification, And sourceforge unofficial guide:
+        https://www.bittorrent.org/beps/bep_0015.html
+        https://xbtt.sourceforge.net/udp_tracker_protocol.html
+        """
         connection_id = 0x41727101980
         url_details = urlparse(self.url)
         tracker_address = (url_details.hostname, url_details.port)
@@ -60,5 +66,3 @@ class UDPTracker(Tracker):
                 f"Tracker {url_details.hostname}:{url_details.port} give no answer"
             )
             return []
-
-        return []

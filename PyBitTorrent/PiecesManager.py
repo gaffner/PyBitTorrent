@@ -4,6 +4,9 @@ class DiskManager:
         self.written = 0
 
     def write_piece(self, piece, piece_size):
+        """
+        Write piece to disk according to the offset
+        """
         piece_data = piece.get_data()
         self.file.seek(piece_size * piece.index)
         self.file.write(piece_data)
@@ -12,5 +15,7 @@ class DiskManager:
         self.written += 1
 
     def close(self):
-        print("\nClosing the file")
+        """
+        Self-explanatory
+        """
         self.file.close()

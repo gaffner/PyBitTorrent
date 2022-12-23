@@ -49,7 +49,7 @@ class Choke(Message):
 
     @staticmethod
     def from_bytes(payload):
-        # The unchoke message contains no relevant values...
+        # The choke message contains no relevant values...
         return Unchoke()
 
 
@@ -77,7 +77,6 @@ class BitField(Message):
         bitfield = BitArray(payload)
         return BitField(bitfield)
 
-    # TODO: add to_bytes
     def to_bytes(self) -> bytes:
         raise NotImplemented
 
@@ -206,5 +205,6 @@ MessageTypes = Union[
     BitField,
     HaveMessage,
     Unchoke,
+    Choke,
     UnknownMessage,
 ]

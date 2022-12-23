@@ -13,6 +13,11 @@ class HTTPTracker(Tracker):
     timeout = 3  # seconds
 
     def get_peers(self, peer_id: bytes, port: int, torrent: TorrentFile) -> List[Peer]:
+        """
+        Request from the http tracker all the peers,
+        parse them, and then return list containing
+        Peer objects.
+        """
         logging.getLogger("BitTorrent").error(f"Connecting to HTTP Tracker {self.url}")
 
         params = {

@@ -14,6 +14,10 @@ class Piece:
         return f"[{self.index}]"
 
     def is_full(self):
+        """
+        Iterate over the blocks and
+        check if they are all fulls
+        """
         for block in self.blocks:
             if block.status != BlockStatus.FULL:
                 return False
@@ -21,6 +25,10 @@ class Piece:
         return True
 
     def get_free_block(self) -> Union[Block, None]:
+        """
+        Iterate over the blocks and
+        check if of them is free
+        """
         for block in self.blocks:
             block.calculate_status()
             if block.status == BlockStatus.FREE:
@@ -32,6 +40,10 @@ class Piece:
             raise PieceIsPending
 
     def get_block_by_offset(self, offset):
+        """
+        Iterate over the blocks and check if
+        one of them match the given offset
+        """
         for block in self.blocks:
             if block.offset == offset:
                 return block
@@ -39,6 +51,10 @@ class Piece:
         raise PieceIsPending
 
     def get_data(self):
+        """
+        Concat the data in all the blocks to
+        retrieve the full data of the piece
+        """
         data = b""
         for block in self.blocks:
             data += block.data
@@ -47,6 +63,10 @@ class Piece:
 
 
 def create_pieces(file_size, piece_size) -> List[Piece]:
+    """
+    Create list of empty pieces for the given
+    file_size and the given piece_size
+    """
     pieces: List[Piece] = []
     pieces_amount = int(file_size / piece_size)
 

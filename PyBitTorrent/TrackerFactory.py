@@ -26,6 +26,10 @@ class TrackerFactory:
 
     @staticmethod
     def create_trackers(urls: List[str]) -> List[Tracker]:
+        """
+        Create trackers from the given url list.
+        Current options are HTTP/UDP.
+        """
         trackers = []
         for url in urls:
             tracker = TrackerFactory.create_tracker(url[0])

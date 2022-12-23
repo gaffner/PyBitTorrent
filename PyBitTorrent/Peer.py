@@ -30,7 +30,6 @@ class Peer:
             self.socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
         else:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.socket.settimeout(5)
 
     def __str__(self):
         return f"{self.ip}, {self.port}"  # Should add id
@@ -89,9 +88,8 @@ class Peer:
             raise PeerDisconnected
 
         if packet_length == b"":
-            # logging.getLogger('BitTorrent').debug(f'Client in ip {self.ip} with id {self.id} disconnected')
+            logging.getLogger('BitTorrent').debug(f'Client in ip {self.ip} with id {self.id} disconnected')
             self.socket.close()
-            # print(f"{myid}done")
             raise PeerDisconnected
 
         if self.connected:
@@ -102,28 +100,23 @@ class Peer:
                 logging.getLogger("BitTorrent").error(
                     f"Setting size again in {self}, length: {packet_length}"
                 )
-                # print('.')
 
             try:
                 length = struct.unpack(">I", packet_length)[0]  # Big endian integer
             except struct.error:
-                # print(f"{myid}The packet length:", packet_length)
                 raise struct.error
             data = self.socket.recv(length)
 
             while len(data) != length:
                 odd = length - len(data)
                 data += self.socket.recv(odd)
-                # print('.')
 
-            #             # print(f"{myid}done")
             return MessageFactory.create_message(data)
 
         else:
             protocol_len: int = struct.unpack(">B", packet_length)[0]
             handshake_bytes = self.socket.recv(protocol_len + HANDSHAKE_STRIPPED_SIZE)
 
-            # print(f"{myid}done")
             return MessageFactory.create_handshake_message(
                 packet_length + handshake_bytes
             )

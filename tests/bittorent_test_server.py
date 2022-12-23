@@ -2,7 +2,7 @@ import socket
 import sys
 import threading
 
-from Message import Unchoke, Choke, KeepAlive
+from PyBitTorrent.Message import Unchoke, Choke, KeepAlive
 
 
 def receiver():

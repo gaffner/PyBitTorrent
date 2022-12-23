@@ -4,10 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Refactor all project">
+    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="'Black' on all project">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Block.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Block.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/HTTPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/HTTPTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Message.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Message.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Peer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Piece.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/PiecesManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PiecesManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/TorrentFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/TorrentFile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/TrackerFactory.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/TrackerFactory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/TrackerManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/TrackerManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/UDPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/UDPTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/UDPTrackerMessage.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/UDPTrackerMessage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/bittorent_test_server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +65,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tests" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/PyBitTorrent" />
     </key>
@@ -223,7 +237,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671827071535</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="'Black' on all project">
+      <created>1671827378083</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1671827378083</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -253,7 +274,8 @@
     <MESSAGE value="Fully working bittorrent" />
     <MESSAGE value="Packaged the project" />
     <MESSAGE value="Refactor all project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor all project" />
+    <MESSAGE value="'Black' on all project" />
+    <option name="LAST_COMMIT_MESSAGE" value="'Black' on all project" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
