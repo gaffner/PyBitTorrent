@@ -25,7 +25,7 @@ class Tracker(ABC):
             return []
 
         for _ in range(len(peers_bytes) // COMPACT_VALUE_NUM_BYTES):
-            ip, port = struct.unpack_from("!iH", peers_bytes, offset)[0]
+            ip, port = struct.unpack_from("!iH", peers_bytes, offset)
             ip = socket.inet_ntoa(struct.pack("!i", ip))
             offset += 6
 
