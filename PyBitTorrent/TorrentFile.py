@@ -8,13 +8,13 @@ from bcoding import bencode, bdecode
 
 class TorrentFile:
     def __init__(self, torrent):
-        logging.getLogger('BitTorrent').critical('Start reading from BitTorrent file')
+        logging.getLogger("BitTorrent").critical("Start reading from BitTorrent file")
         torrent_data = torrent.read()
         self.config = bdecode(torrent_data)
-        self.info = self.config['info']
+        self.info = self.config["info"]
         self.hash = hashlib.sha1(bencode(self.info)).digest()
-        self.piece_size = self.config['info']['piece length']
-        self.file_name = self.config['info']['name']
+        self.piece_size = self.config["info"]["piece length"]
+        self.file_name = self.config["info"]["name"]
         self.length = 0
         self.print_configuration()
         torrent.close()
@@ -28,5 +28,5 @@ class TorrentFile:
 
     def print_configuration(self):
         config = deepcopy(self.config)
-        config['info']['pieces'] = ''
+        config["info"]["pieces"] = ""
         rich.print(config)

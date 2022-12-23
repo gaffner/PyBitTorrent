@@ -5,7 +5,11 @@ import struct
 
 from bitstring import BitArray
 
-from PyBitTorrent.Exceptions import PeerConnectionFailed, PeerDisconnected, PeerHandshakeFailed
+from PyBitTorrent.Exceptions import (
+    PeerConnectionFailed,
+    PeerDisconnected,
+    PeerHandshakeFailed,
+)
 from PyBitTorrent.Message import Message, Handshake, BitField, HaveMessage
 from PyBitTorrent.MessageFactory import MessageFactory
 
@@ -13,7 +17,7 @@ HANDSHAKE_STRIPPED_SIZE = 48
 
 
 class Peer:
-    def __init__(self, ip: str, port: int, _id: str = '00000000000000000000'):
+    def __init__(self, ip: str, port: int, _id: str = "00000000000000000000"):
         self.ip = ip
         self.port = port
         self.id = _id
@@ -29,7 +33,7 @@ class Peer:
         # self.socket.settimeout(5)
 
     def __str__(self):
-        return f'{self.ip}, {self.port}'  # Should add id
+        return f"{self.ip}, {self.port}"  # Should add id
 
     def connect(self):
         """
@@ -70,7 +74,9 @@ class Peer:
         if have.index < self.bitfield.length:
             self.bitfield[have.index] = True
         else:
-            logging.getLogger('BitTorrent').critical(f'Have message {have.index} smaller then {self.bitfield.length}')
+            logging.getLogger("BitTorrent").critical(
+                f"Have message {have.index} smaller then {self.bitfield.length}"
+            )
 
     def receive_message(self) -> Message:
         # After handshake
@@ -82,7 +88,7 @@ class Peer:
         except OSError:
             raise PeerDisconnected
 
-        if packet_length == b'':
+        if packet_length == b"":
             # logging.getLogger('BitTorrent').debug(f'Client in ip {self.ip} with id {self.id} disconnected')
             self.socket.close()
             # print(f"{myid}done")
@@ -93,11 +99,13 @@ class Peer:
             while len(packet_length) < 4:
                 odd = 4 - len(packet_length)
                 packet_length = packet_length + self.socket.recv(odd)
-                logging.getLogger('BitTorrent').error(f"Setting size again in {self}, length: {packet_length}")
+                logging.getLogger("BitTorrent").error(
+                    f"Setting size again in {self}, length: {packet_length}"
+                )
                 # print('.')
 
             try:
-                length = struct.unpack('>I', packet_length)[0]  # Big endian integer
+                length = struct.unpack(">I", packet_length)[0]  # Big endian integer
             except struct.error:
                 # print(f"{myid}The packet length:", packet_length)
                 raise struct.error
@@ -112,11 +120,13 @@ class Peer:
             return MessageFactory.create_message(data)
 
         else:
-            protocol_len: int = struct.unpack('>B', packet_length)[0]
+            protocol_len: int = struct.unpack(">B", packet_length)[0]
             handshake_bytes = self.socket.recv(protocol_len + HANDSHAKE_STRIPPED_SIZE)
 
             # print(f"{myid}done")
-            return MessageFactory.create_handshake_message(packet_length + handshake_bytes)
+            return MessageFactory.create_handshake_message(
+                packet_length + handshake_bytes
+            )
 
     def send_message(self, message: Message):
         # logging.getLogger('BitTorrent').debug(f'Sending message {type(message)} to {self}')

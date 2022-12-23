@@ -17,9 +17,9 @@ class TrackerFactory:
         :return: Tracker
         """
         parsed = urlparse(url)
-        if 'http' in parsed.scheme.lower():
+        if "http" in parsed.scheme.lower():
             return HTTPTracker(url)
-        elif 'udp' in parsed.scheme.lower():
+        elif "udp" in parsed.scheme.lower():
             return UDPTracker(url)
         else:
             raise UnknownTracker(url)

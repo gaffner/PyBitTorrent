@@ -32,23 +32,33 @@ class UDPTracker(Tracker):
             connection_id = connection_response.connection_id
 
             if connection_request != connection_response:
-                logging.getLogger('BitTorrent').error("UDP Tracker request and response are not equal")
+                logging.getLogger("BitTorrent").error(
+                    "UDP Tracker request and response are not equal"
+                )
 
-            announce = Announce(connection_id, torrent.hash, peer_id, torrent.length, port)
+            announce = Announce(
+                connection_id, torrent.hash, peer_id, torrent.length, port
+            )
             sock.sendto(announce.to_bytes(), tracker_address)
 
             response = sock.recv(RECEIVE_SIZE)  # Answer should be 98 bytes
             announce_response: AnnounceResult = AnnounceResult.from_bytes(response)
 
             if announce_response.transaction_id != announce.transaction_id:
-                logging.getLogger('BitTorrent').error("UDP Tracker request and response are not equal")
+                logging.getLogger("BitTorrent").error(
+                    "UDP Tracker request and response are not equal"
+                )
 
             peers = Tracker.extract_compact_peers(announce_response.peers)
-            logging.getLogger('BitTorrent').critical(f'success in scraping {self.url} got {len(peers)} peers')
+            logging.getLogger("BitTorrent").critical(
+                f"success in scraping {self.url} got {len(peers)} peers"
+            )
             return peers
 
         except socket.error:
-            logging.getLogger('BitTorrent').error(f"Tracker {url_details.hostname}:{url_details.port} give no answer")
+            logging.getLogger("BitTorrent").error(
+                f"Tracker {url_details.hostname}:{url_details.port} give no answer"
+            )
             return []
 
         return []

@@ -23,6 +23,7 @@ console = Console()
 #     #         print("Breaking")
 #     #         return
 
+
 def read_peers_from_file(peers_file):
     """
     Read the peers ip and port from the peers file
@@ -31,7 +32,7 @@ def read_peers_from_file(peers_file):
 
     connections = peers_file.readlines()
     for connection in connections:
-        ip, port = connection.decode().strip('\r\n').split(':')
+        ip, port = connection.decode().strip("\r\n").split(":")
         port = int(port)
         peer = Peer(ip=ip, port=port)
 

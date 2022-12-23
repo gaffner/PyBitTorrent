@@ -11,7 +11,7 @@ class Piece:
         self.blocks: List[Block] = create_blocks(self.size)
 
     def __str__(self):
-        return f'[{self.index}]'
+        return f"[{self.index}]"
 
     def is_full(self):
         for block in self.blocks:
@@ -39,7 +39,7 @@ class Piece:
         raise PieceIsPending
 
     def get_data(self):
-        data = b''
+        data = b""
         for block in self.blocks:
             data += block.data
 

@@ -17,7 +17,7 @@ class Block:
         self.status = BlockStatus.FREE
         self.offset = offset
         self.size = size
-        self.data = b''
+        self.data = b""
         self.time_requested = 0  # Used for determine block status
 
     def set_requested(self):

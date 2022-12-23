@@ -1,6 +1,6 @@
 class DiskManager:
     def __init__(self, file_name: str):
-        self.file = open(file_name, 'wb')
+        self.file = open(file_name, "wb")
         self.written = 0
 
     def write_piece(self, piece, piece_size):

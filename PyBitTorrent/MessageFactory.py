@@ -1,5 +1,15 @@
-from PyBitTorrent.Message import MessageCode, Message, Handshake, \
-    UnknownMessage, KeepAlive, BitField, Choke, Unchoke, PieceMessage, HaveMessage
+from PyBitTorrent.Message import (
+    MessageCode,
+    Message,
+    Handshake,
+    UnknownMessage,
+    KeepAlive,
+    BitField,
+    Choke,
+    Unchoke,
+    PieceMessage,
+    HaveMessage,
+)
 
 
 class MessageFactory:
@@ -39,8 +49,10 @@ class MessageFactory:
         return HaveMessage.from_bytes(payload)
 
 
-messages_creators = {MessageCode.BITFIELD: MessageFactory.create_bitfield_message,
-                     MessageCode.CHOKE: MessageFactory.create_choke_message,
-                     MessageCode.UNCHOKE: MessageFactory.create_unchoke_message,
-                     MessageCode.PIECE: MessageFactory.create_piece_message,
-                     MessageCode.HAVE: MessageFactory.create_have_message}
+messages_creators = {
+    MessageCode.BITFIELD: MessageFactory.create_bitfield_message,
+    MessageCode.CHOKE: MessageFactory.create_choke_message,
+    MessageCode.UNCHOKE: MessageFactory.create_unchoke_message,
+    MessageCode.PIECE: MessageFactory.create_piece_message,
+    MessageCode.HAVE: MessageFactory.create_have_message,
+}

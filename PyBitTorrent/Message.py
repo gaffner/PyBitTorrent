@@ -22,7 +22,6 @@ class MessageCode(enum.IntEnum):
 
 
 class Message(ABC):
-
     @abstractmethod
     def to_bytes(self) -> bytes:
         pass
@@ -46,9 +45,7 @@ class Choke(Message):
         self.length = 1
 
     def to_bytes(self) -> bytes:
-        return struct.pack('>IB',
-                           self.length,
-                           self.id)
+        return struct.pack(">IB", self.length, self.id)
 
     @staticmethod
     def from_bytes(payload):
@@ -62,9 +59,7 @@ class Unchoke(Message):
         self.length = 1
 
     def to_bytes(self) -> bytes:
-        return struct.pack('>IB',
-                           self.length,
-                           self.id)
+        return struct.pack(">IB", self.length, self.id)
 
     @staticmethod
     def from_bytes(payload):
@@ -88,7 +83,9 @@ class BitField(Message):
 
 
 class Handshake(Message):
-    def __init__(self, peer_id: bytes, info_hash: bytes, protocol: str = 'BitTorrent protocol'):
+    def __init__(
+        self, peer_id: bytes, info_hash: bytes, protocol: str = "BitTorrent protocol"
+    ):
         self.id = MessageCode.HANDSHAKE
         self.peer_id = peer_id
         self.info_hash = info_hash
@@ -96,12 +93,14 @@ class Handshake(Message):
 
     def to_bytes(self) -> bytes:
         protocol_len = len(self.protocol)
-        handshake = struct.pack(f'>B{protocol_len}s8s20s20s',
-                                protocol_len,
-                                self.protocol.encode(),
-                                b'\x00' * 8,
-                                self.info_hash,
-                                self.peer_id)
+        handshake = struct.pack(
+            f">B{protocol_len}s8s20s20s",
+            protocol_len,
+            self.protocol.encode(),
+            b"\x00" * 8,
+            self.info_hash,
+            self.peer_id,
+        )
 
         return handshake
 
@@ -109,9 +108,11 @@ class Handshake(Message):
     def from_bytes(payload: bytes):
         if len(payload) != 68:
             print("Payload error:", payload)
-            return b''
-        protocol_len = struct.unpack('>B', payload[:1])[0]
-        protocol, reserved, info_hash, peer_id = struct.unpack(f'>{protocol_len}s8s20s20s', payload[1:])
+            return b""
+        protocol_len = struct.unpack(">B", payload[:1])[0]
+        protocol, reserved, info_hash, peer_id = struct.unpack(
+            f">{protocol_len}s8s20s20s", payload[1:]
+        )
 
         return Handshake(peer_id, info_hash, protocol)
 
@@ -128,16 +129,13 @@ class Request(Message):
         self.length = 13  # bytes
 
     def to_bytes(self) -> bytes:
-        return struct.pack('>IBIII',
-                           self.length,
-                           self.id,
-                           self.index,
-                           self.begin,
-                           self.piece_length)
+        return struct.pack(
+            ">IBIII", self.length, self.id, self.index, self.begin, self.piece_length
+        )
 
     @staticmethod
     def from_bytes(payload):
-        _, _, index, begin, length = struct.unpack('>IBIII', payload)
+        _, _, index, begin, length = struct.unpack(">IBIII", payload)
         return Request(index, begin, length)
 
 
@@ -148,11 +146,11 @@ class PieceMessage(Message):
         self.data = data
 
     def __str__(self):
-        return f'[index: {self.index}, offset: {self.offset}]'
+        return f"[index: {self.index}, offset: {self.offset}]"
 
     @staticmethod
     def from_bytes(payload):
-        index, offset = struct.unpack('>II', payload[:8])
+        index, offset = struct.unpack(">II", payload[:8])
         data = payload[8:]
 
         return PieceMessage(index, offset, data)
@@ -170,7 +168,7 @@ class HaveMessage(Message):
 
     @staticmethod
     def from_bytes(payload):
-        index = struct.unpack('>I', payload)[0]
+        index = struct.unpack(">I", payload)[0]
 
         return HaveMessage(index)
 
@@ -192,7 +190,7 @@ class UnknownMessage(Message):
 
 class KeepAlive(Message):
     def to_bytes(self) -> bytes:
-        return struct.pack('I', 0)
+        return struct.pack("I", 0)
 
     @staticmethod
     def from_bytes(payload):
@@ -200,4 +198,13 @@ class KeepAlive(Message):
 
 
 # Used for typing
-MessageTypes = Union[Message, Handshake, Request, PieceMessage, BitField, HaveMessage, Unchoke, UnknownMessage]
+MessageTypes = Union[
+    Message,
+    Handshake,
+    Request,
+    PieceMessage,
+    BitField,
+    HaveMessage,
+    Unchoke,
+    UnknownMessage,
+]

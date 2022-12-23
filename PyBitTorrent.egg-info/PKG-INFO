@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: PyBitTorrent
+Version: 0.1.0
+Summary: Download torrent files according to BitTorrent specifications
+Author: Gaffner
+Author-email: gefen102@gmail.com
+License: LICENSE.txt
+License-File: LICENCE
+
+PyBitTorrent 

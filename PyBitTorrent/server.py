@@ -12,7 +12,7 @@ def receiver():
         data = client.recv(1024)
         print(data)
 
-        if data == b'':
+        if data == b"":
             print("Client disconnected!")
             input("Type to continue...")
 
@@ -29,7 +29,7 @@ def receiver():
 
 PORT = int(sys.argv[-1])
 sock = socket.socket()
-sock.bind(('127.0.0.1', PORT))
+sock.bind(("127.0.0.1", PORT))
 
 print(f"Listening on 127.0.0.1:{PORT}")
 
@@ -57,5 +57,5 @@ while True:
             print("wtf?")
             continue
 
-        print('Sending:', msg.to_bytes())
+        print("Sending:", msg.to_bytes())
         client.send(msg.to_bytes())
