@@ -1,4 +1,6 @@
 import random
+import string
+from importlib import metadata
 
 from rich.console import Console
 
@@ -29,5 +31,9 @@ def generate_peer_id():
     """
     Generate random peer id with length of 20 bytes
     """
-    # TODO: generate peer id with program version
-    return bytes([random.randint(0, 255) for i in range(20)])
+    version = metadata.version('PyBitTorrent').replace('.', '') + '0'
+    id_suffix = ''.join([random.choice(string.ascii_letters) for _ in range(12)])
+    peer_id = f'-GF{version}-{id_suffix}'
+    assert len(peer_id) == 20
+
+    return peer_id.encode()
