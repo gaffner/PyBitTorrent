@@ -1,4 +1,4 @@
-from Message import MessageCode, Message, Handshake, \
+from PyBitTorrent.Message import MessageCode, Message, Handshake, \
     UnknownMessage, KeepAlive, BitField, Choke, Unchoke, PieceMessage, HaveMessage
 
 

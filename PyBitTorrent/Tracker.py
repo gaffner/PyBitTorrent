@@ -3,8 +3,8 @@ import struct
 from abc import ABC, abstractmethod
 from typing import List
 
-from Peer import Peer
-from TorrentFile import TorrentFile
+from PyBitTorrent.Peer import Peer
+from PyBitTorrent.TorrentFile import TorrentFile
 
 
 class Tracker(ABC):

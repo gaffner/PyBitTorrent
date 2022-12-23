@@ -1,15 +1,13 @@
 import ipaddress
 import logging
-import random
 import socket
 import struct
 
 from bitstring import BitArray
 
-import Utils
-from Exceptions import PeerConnectionFailed, PeerDisconnected, PeerHandshakeFailed
-from Message import Message, Handshake, BitField, HaveMessage
-from MessageFactory import MessageFactory
+from PyBitTorrent.Exceptions import PeerConnectionFailed, PeerDisconnected, PeerHandshakeFailed
+from PyBitTorrent.Message import Message, Handshake, BitField, HaveMessage
+from PyBitTorrent.MessageFactory import MessageFactory
 
 HANDSHAKE_STRIPPED_SIZE = 48
 
@@ -110,7 +108,7 @@ class Peer:
                 data += self.socket.recv(odd)
                 # print('.')
 
-#             # print(f"{myid}done")
+            #             # print(f"{myid}done")
             return MessageFactory.create_message(data)
 
         else:

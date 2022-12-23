@@ -3,12 +3,10 @@ import socket
 from typing import List
 from urllib.parse import urlparse
 
-import rich
-
-from Peer import Peer
-from TorrentFile import TorrentFile
-from Tracker import Tracker
-from UDPTrackerMessage import Connection, Announce, AnnounceResult
+from PyBitTorrent.Peer import Peer
+from PyBitTorrent.TorrentFile import TorrentFile
+from PyBitTorrent.Tracker import Tracker
+from PyBitTorrent.UDPTrackerMessage import Connection, Announce, AnnounceResult
 
 RECEIVE_SIZE = 16384
 

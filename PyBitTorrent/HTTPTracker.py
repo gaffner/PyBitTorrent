@@ -4,9 +4,9 @@ from typing import List
 import requests
 from bcoding import bdecode
 
-from Peer import Peer
-from TorrentFile import TorrentFile
-from Tracker import Tracker
+from PyBitTorrent.Peer import Peer
+from PyBitTorrent.TorrentFile import TorrentFile
+from PyBitTorrent.Tracker import Tracker
 
 
 class HTTPTracker(Tracker):

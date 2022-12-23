@@ -1,6 +1,6 @@
-import struct
-import random
 import logging
+import random
+import struct
 
 DEFAULT_CONNECTION_ID = 0x41727101980
 CONNECT = 0
@@ -53,8 +53,8 @@ class Announce:
         num_want = -1
 
         _bytes = struct.pack('>QII20s20sQQQIIIiH', self.connection_id, self.action, self.transaction_id,
-                           self.info_hash, self.peer_id, downloaded, left, uploaded, event, ip, key,
-                           num_want, self.port)
+                             self.info_hash, self.peer_id, downloaded, left, uploaded, event, ip, key,
+                             num_want, self.port)
 
         return _bytes
 

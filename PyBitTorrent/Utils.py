@@ -1,9 +1,11 @@
 import random
 
-from Peer import Peer
 from rich.console import Console
 
+from PyBitTorrent.Peer import Peer
+
 console = Console()
+
 
 #
 # def show_downloading_progress(pieces_manager: PieceManager, pieces_length: int):

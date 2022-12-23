@@ -1,7 +1,7 @@
 import logging
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
 
-from Bittorrent import BitTorrentClient
+from PyBitTorrent.Bittorrent import BitTorrentClient
 
 LOGGING_NONE = 100
 
@@ -24,18 +24,17 @@ def main():
     if args.no_progress_bar:
         logging_level = logging.DEBUG
 
-
     logging.basicConfig(level=logging_level,
                         format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S'
                         )
 
     # Create client from the BitTorrent Meta File
-    torrentClient = BitTorrentClient(torrent=args.torrent, max_peers=args.max_peers,
+    torrent_client = BitTorrentClient(torrent=args.torrent, max_peers=args.max_peers,
                                      no_progress_bar=args.no_progress_bar, peers_file=args.peers)
 
     # Start downloading the file
-    torrentClient.start()
+    torrent_client.start()
 
 
 if __name__ == '__main__':

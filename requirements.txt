@@ -1,0 +1,5 @@
+setuptools~=45.2.0
+bitstring~=4.0.1
+rich~=12.6.0
+requests~=2.22.0
+bcoding~=1.5

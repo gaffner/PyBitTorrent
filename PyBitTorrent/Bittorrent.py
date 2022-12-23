@@ -4,20 +4,29 @@ import time
 from threading import Thread
 from typing import List
 
-import Utils
-from Block import BlockStatus
-from Exceptions import PieceIsPending, NoPeersHavePiece, NoPieceFound, PeerDisconnected, PieceIsFull, OutOfPeers, \
-    AllPeersChocked
-from Message import Handshake, KeepAlive, BitField, Unchoke, Request, PieceMessage, HaveMessage, Choke
-from PeersManager import PeersManager
-from Piece import Piece, create_pieces
-from PiecesManager import PieceManager
-from TorrentFile import TorrentFile
-from TrackerFactory import TrackerFactory
-from TrackerManager import TrackerManager
-from Utils import generate_peer_id, read_peers_from_file
 from rich import progress
-import colorama
+
+from PyBitTorrent.Block import BlockStatus
+from PyBitTorrent.Exceptions import PieceIsPending, NoPeersHavePiece, NoPieceFound, PeerDisconnected, PieceIsFull, OutOfPeers, \
+    AllPeersChocked
+from PyBitTorrent.PeersManager import PeersManager
+from PyBitTorrent.Piece import Piece, create_pieces
+from PyBitTorrent.PiecesManager import DiskManager
+from PyBitTorrent import Utils
+from PyBitTorrent.Message import (
+    Handshake,
+    KeepAlive,
+    BitField,
+    Unchoke,
+    Request,
+    PieceMessage,
+    HaveMessage,
+    Choke
+)
+from PyBitTorrent.TorrentFile import TorrentFile
+from PyBitTorrent.TrackerFactory import TrackerFactory
+from PyBitTorrent.TrackerManager import TrackerManager
+from PyBitTorrent.Utils import generate_peer_id, read_peers_from_file
 
 LISTENING_PORT = 6881
 MAX_LISTENING_PORT = 6889
@@ -39,7 +48,7 @@ class BitTorrentClient:
         self.use_progress_bar = not no_progress_bar
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
-        self.piece_manager = PieceManager('{}.written'.format(self.torrent.file_name))
+        self.piece_manager = DiskManager('{}.written'.format(self.torrent.file_name))
         # Utils.show_downloading_progress(None, None)
         # create tracker for each url of tracker in the config file
         trackers = []
@@ -55,7 +64,6 @@ class BitTorrentClient:
         file_size, piece_size = self.torrent.length, self.torrent.piece_size
         self.pieces = create_pieces(file_size, piece_size)
         self.number_of_pieces = len(self.pieces)
-
 
     def start(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
@@ -197,7 +205,6 @@ class BitTorrentClient:
 
         raise NoPieceFound
 
-
     def handle_piece(self, pieceMessage: PieceMessage):
         try:
             if len(pieceMessage.data) == 0:
@@ -215,10 +222,11 @@ class BitTorrentClient:
                 self.piece_manager.write_piece(piece, self.torrent.piece_size)
                 self.pieces.remove(piece)
                 if not self.use_progress_bar:
-                    Utils.console.print("[green]Progress: {have}/{total} Unchoked peers: {peers_have}/{total_peers}".format(
-                        have=self.piece_manager.written,
-                        total=self.number_of_pieces, peers_have=self.peer_manager.num_of_unchoked,
-                        total_peers=len(self.peer_manager.connected_peers)))
+                    Utils.console.print(
+                        "[green]Progress: {have}/{total} Unchoked peers: {peers_have}/{total_peers}".format(
+                            have=self.piece_manager.written,
+                            total=self.number_of_pieces, peers_have=self.peer_manager.num_of_unchoked,
+                            total_peers=len(self.peer_manager.connected_peers)))
 
                 del piece
                 return True

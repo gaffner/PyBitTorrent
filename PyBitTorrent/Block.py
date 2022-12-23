@@ -2,8 +2,6 @@ import time
 from enum import Enum
 from typing import List
 
-from humanfriendly import parse_size
-
 
 class BlockStatus(Enum):
     FREE = 1

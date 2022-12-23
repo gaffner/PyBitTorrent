@@ -1,8 +1,7 @@
-import time
 from typing import List, Union
 
-from Block import Block, BlockStatus, create_blocks
-from Exceptions import PieceIsPending, PieceIsFull
+from PyBitTorrent.Block import Block, BlockStatus, create_blocks
+from PyBitTorrent.Exceptions import PieceIsPending, PieceIsFull
 
 
 class Piece:

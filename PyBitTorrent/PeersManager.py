@@ -4,12 +4,12 @@ import random
 import select
 import socket
 import threading
-from typing import List, Tuple, Dict
+from typing import List, Dict
 
-from Exceptions import PeerConnectionFailed, PeerDisconnected, OutOfPeers, NoPeersHavePiece, PeerHandshakeFailed, \
+from PyBitTorrent.Exceptions import PeerConnectionFailed, PeerDisconnected, OutOfPeers, NoPeersHavePiece, PeerHandshakeFailed, \
     AllPeersChocked
-from Message import MessageTypes
-from Peer import Peer
+from PyBitTorrent.Message import MessageTypes
+from PyBitTorrent.Peer import Peer
 
 MAX_HANDSHAKE_THREADS = 80
 
@@ -48,7 +48,8 @@ class PeersManager:
             self.connected_peers.append(peer)
 
             # logging.getLogger('BitTorrent').info(f'Success in handshaking peer {peer}')
-            logging.getLogger('BitTorrent').debug(f"Adding peer {peer} which is {len(self.connected_peers)}/{self.max_peers}")
+            logging.getLogger('BitTorrent').debug(
+                f"Adding peer {peer} which is {len(self.connected_peers)}/{self.max_peers}")
 
         except (PeerHandshakeFailed, PeerDisconnected, socket.error):
             # logging.getLogger('BitTorrent').debug(f'Failed handshaking peer {peer}')
@@ -67,7 +68,7 @@ class PeersManager:
         # if number_of_polls * MAX_HANDSHAKE_THREADS > len(handshake_threads):
         #     number_of_polls = int(len(handshake_threads) / MAX_HANDSHAKE_THREADS) + 1
 
-        for i in range(1, number_of_polls+1):
+        for i in range(1, number_of_polls + 1):
             logging.getLogger('BitTorrent').debug(f'Poll number {i}/{number_of_polls}')
             poll = handshake_threads[:MAX_HANDSHAKE_THREADS]
 
