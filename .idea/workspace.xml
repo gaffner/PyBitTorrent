@@ -4,35 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Fully working bittorrent">
-      <change afterPath="$PROJECT_DIR$/LICENCE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PyBitTorrent/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/TorrentClient.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Packaged the project">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Block.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Block.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Exceptions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HTTPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/HTTPTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Message.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Message.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MessageFactory.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/MessageFactory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Peer.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Peer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Piece.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PiecesManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PiecesManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TorrentFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/TorrentFile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Tracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrackerFactory.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/TrackerFactory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrackerManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/TrackerManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UDPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/UDPTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UDPTrackerMessage.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/UDPTrackerMessage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,7 +211,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671820257691</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Packaged the project">
+      <created>1671826774257</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1671826774257</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -262,7 +246,8 @@
     <MESSAGE value="Change comment" />
     <MESSAGE value="Added working torrent" />
     <MESSAGE value="Fully working bittorrent" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fully working bittorrent" />
+    <MESSAGE value="Packaged the project" />
+    <option name="LAST_COMMIT_MESSAGE" value="Packaged the project" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

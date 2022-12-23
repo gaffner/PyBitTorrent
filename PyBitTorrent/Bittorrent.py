@@ -6,13 +6,11 @@ from typing import List
 
 from rich import progress
 
-from PyBitTorrent.Block import BlockStatus
-from PyBitTorrent.Exceptions import PieceIsPending, NoPeersHavePiece, NoPieceFound, PeerDisconnected, PieceIsFull, OutOfPeers, \
-    AllPeersChocked
-from PyBitTorrent.PeersManager import PeersManager
-from PyBitTorrent.Piece import Piece, create_pieces
-from PyBitTorrent.PiecesManager import DiskManager
 from PyBitTorrent import Utils
+from PyBitTorrent.Block import BlockStatus
+from PyBitTorrent.Exceptions import PieceIsPending, NoPeersHavePiece, NoPieceFound, PeerDisconnected, PieceIsFull, \
+    OutOfPeers, \
+    AllPeersChocked
 from PyBitTorrent.Message import (
     Handshake,
     KeepAlive,
@@ -23,6 +21,9 @@ from PyBitTorrent.Message import (
     HaveMessage,
     Choke
 )
+from PyBitTorrent.PeersManager import PeersManager
+from PyBitTorrent.Piece import Piece, create_pieces
+from PyBitTorrent.PiecesManager import DiskManager
 from PyBitTorrent.TorrentFile import TorrentFile
 from PyBitTorrent.TrackerFactory import TrackerFactory
 from PyBitTorrent.TrackerManager import TrackerManager
