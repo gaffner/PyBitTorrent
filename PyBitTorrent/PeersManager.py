@@ -6,9 +6,14 @@ import socket
 import threading
 from typing import List, Dict
 
-from PyBitTorrent.Exceptions import PeerConnectionFailed, PeerDisconnected, OutOfPeers, NoPeersHavePiece, \
-    PeerHandshakeFailed, \
-    AllPeersChocked
+from PyBitTorrent.Exceptions import (
+    PeerConnectionFailed,
+    PeerDisconnected,
+    OutOfPeers,
+    NoPeersHavePiece,
+    PeerHandshakeFailed,
+    AllPeersChocked,
+)
 from PyBitTorrent.Message import MessageTypes
 from PyBitTorrent.Peer import Peer
 
@@ -49,8 +54,9 @@ class PeersManager:
             self.connected_peers.append(peer)
 
             # logging.getLogger('BitTorrent').info(f'Success in handshaking peer {peer}')
-            logging.getLogger('BitTorrent').debug(
-                f"Adding peer {peer} which is {len(self.connected_peers)}/{self.max_peers}")
+            logging.getLogger("BitTorrent").debug(
+                f"Adding peer {peer} which is {len(self.connected_peers)}/{self.max_peers}"
+            )
 
         except (PeerHandshakeFailed, PeerDisconnected, socket.error):
             # logging.getLogger('BitTorrent').debug(f'Failed handshaking peer {peer}')
@@ -60,7 +66,9 @@ class PeersManager:
         # Create handshake thread for each peer
         handshake_threads = []
         for peer in self.peers:
-            thread = threading.Thread(target=self._send_handshake, args=(my_id, info_hash, peer))
+            thread = threading.Thread(
+                target=self._send_handshake, args=(my_id, info_hash, peer)
+            )
             handshake_threads.append(thread)
 
         number_of_polls = int(len(handshake_threads) / MAX_HANDSHAKE_THREADS) + 1
@@ -70,7 +78,7 @@ class PeersManager:
         #     number_of_polls = int(len(handshake_threads) / MAX_HANDSHAKE_THREADS) + 1
 
         for i in range(1, number_of_polls + 1):
-            logging.getLogger('BitTorrent').debug(f'Poll number {i}/{number_of_polls}')
+            logging.getLogger("BitTorrent").debug(f"Poll number {i}/{number_of_polls}")
             poll = handshake_threads[:MAX_HANDSHAKE_THREADS]
 
             # Execute threads
@@ -82,13 +90,17 @@ class PeersManager:
                 thread.join()
 
             if len(self.connected_peers) >= self.max_peers:
-                logging.getLogger('BitTorrent').info(f'Reached max connected peers of {self.max_peers}')
+                logging.getLogger("BitTorrent").info(
+                    f"Reached max connected peers of {self.max_peers}"
+                )
                 break
 
             # Slice the handshake threads
             del handshake_threads[:MAX_HANDSHAKE_THREADS]
 
-        logging.getLogger('BitTorrent').info(f'Total peers connected: {len(self.connected_peers)}')
+        logging.getLogger("BitTorrent").info(
+            f"Total peers connected: {len(self.connected_peers)}"
+        )
 
     def receive_messages(self) -> Dict[Peer, MessageTypes]:
         """
@@ -118,7 +130,9 @@ class PeersManager:
                 message = peer.receive_message()
                 peers_to_message[peer] = message
             except PeerDisconnected:
-                logging.getLogger('BitTorrent').debug(f'Peer {peer} while waiting for message')
+                logging.getLogger("BitTorrent").debug(
+                    f"Peer {peer} while waiting for message"
+                )
                 self.remove_peer(peer)
                 return self.receive_messages()
 

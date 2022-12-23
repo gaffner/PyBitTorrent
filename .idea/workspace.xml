@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Packaged the project">
+    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Refactor all project">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Exceptions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +216,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671826774257</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Refactor all project">
+      <created>1671827071535</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1671827071535</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -247,7 +252,8 @@
     <MESSAGE value="Added working torrent" />
     <MESSAGE value="Fully working bittorrent" />
     <MESSAGE value="Packaged the project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Packaged the project" />
+    <MESSAGE value="Refactor all project" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor all project" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
