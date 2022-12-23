@@ -145,6 +145,7 @@ class BitTorrentClient:
                     peer.set_choked()
 
                 elif type(message) is Unchoke:
+                    logging.getLogger("BitTorrent").debug(f"Received unchoke from {peer}")
                     peer.set_unchoked()
 
                 elif type(message) is PieceMessage:
@@ -186,9 +187,6 @@ class BitTorrentClient:
                 continue
 
             except PieceIsFull:
-                logging.getLogger("BitTorrent").debug(
-                    f"All blocks of piece {piece.index} are full, writing to disk..."
-                )
                 continue
 
             except NoPeersHavePiece:
@@ -237,14 +235,13 @@ class BitTorrentClient:
             block = piece.get_block_by_offset(pieceMessage.offset)
             block.data = pieceMessage.data
             block.status = BlockStatus.FULL
-            logging.getLogger('BitTorrent').debug(f'Successfully got block of piece {piece.index}')
 
             if piece.is_full():
                 self.piece_manager.write_piece(piece, self.torrent.piece_size)
                 self.pieces.remove(piece)
                 if not self.use_progress_bar:
-                    Utils.console.print(
-                        "[green]Progress: {have}/{total} Unchoked peers: {peers_have}/{total_peers}".format(
+                    logging.getLogger("BitTorrent").info(
+                        "Progress: {have}/{total} Unchoked peers: {peers_have}/{total_peers}".format(
                             have=self.piece_manager.written,
                             total=self.number_of_pieces,
                             peers_have=self.peer_manager.num_of_unchoked,

@@ -136,8 +136,8 @@ class PeersManager:
         peers_to_message = {}
         # Extract peer from given sockets
         for _peer in self.connected_peers:
-            for readable in readable:
-                if _peer.socket == readable:
+            for should_read in readable:
+                if _peer.socket == should_read:
                     peers_to_message[_peer] = None
 
         # Receive messages from all the given peers
