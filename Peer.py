@@ -95,7 +95,7 @@ class Peer:
             while len(packet_length) < 4:
                 odd = 4 - len(packet_length)
                 packet_length = packet_length + self.socket.recv(odd)
-                logging.getLogger('BitTorrent').error(f"[yellow]Setting size again in {self}, length: {packet_length}")
+                logging.getLogger('BitTorrent').error(f"Setting size again in {self}, length: {packet_length}")
                 # print('.')
 
             try:

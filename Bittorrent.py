@@ -76,11 +76,9 @@ class BitTorrentClient:
 
         handshakes.start()
         requester.start()
-
-
+        print("---------------------Done---------------------")
         self.progress_download()
         handshakes.join()
-        print("---------------------Done---------------------")
         requester.join()
         print("GoodBye!")
 
@@ -166,7 +164,7 @@ class BitTorrentClient:
                 continue
 
             except PieceIsFull:
-                # logging.getLogger('BitTorrent').debug(f'All blocks of piece {piece.index} are full, writing to disk...')
+                logging.getLogger('BitTorrent').debug(f'All blocks of piece {piece.index} are full, writing to disk...')
                 continue
 
             except NoPeersHavePiece:
