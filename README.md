@@ -1,6 +1,5 @@
 # PyBitTorrent
-
-## A Python package for download torrent files.
+### A Python package for download torrent files.
 
 ### How to use:
 
