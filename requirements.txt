@@ -1,5 +1,11 @@
-setuptools~=45.2.0
-bitstring~=4.0.1
-rich~=12.6.0
-requests~=2.22.0
-bcoding~=1.5
+bcoding==1.5
+bitstring==4.0.1
+certifi==2022.12.7
+chardet==3.0.4
+commonmark==0.9.1
+idna==2.8
+Pygments==2.13.0
+requests==2.22.0
+rich==12.6.0
+typing-extensions==4.4.0
+urllib3==1.25.11
