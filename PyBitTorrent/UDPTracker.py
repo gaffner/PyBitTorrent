@@ -56,7 +56,7 @@ class UDPTracker(Tracker):
                 )
 
             peers = Tracker.extract_compact_peers(announce_response.peers)
-            logging.getLogger("BitTorrent").critical(
+            logging.getLogger("BitTorrent").info(
                 f"success in scraping {self.url} got {len(peers)} peers"
             )
             return peers

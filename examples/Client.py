@@ -1,5 +1,5 @@
 import logging
-from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from PyBitTorrent.Bittorrent import TorrentClient
 
@@ -11,19 +11,17 @@ def main():
     Script for downloading torrent files
     """
 
-    parser = ArgumentParser(main.__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--torrent', type=FileType('rb'), help='Path of the Torrent file', required=True)
-    parser.add_argument('--peers', type=FileType('rb'), help='Path to file contain peers (in the format:'
-                                                             'ip:port for each line)')
-    parser.add_argument('--output-directory', default='.', type=str, help='Path to the output directory.'
-                                                                          'Default is the current directory.')
-    parser.add_argument('--no-progress-bar', action='store_true', default=False, help='should show progress bar')
+    parser = ArgumentParser(main.__doc__)
+    parser.add_argument('--torrent', type=str, help='Path of the Torrent file', required=True)
+    parser.add_argument('--peers', type=str, help='Path to file contain peers (in the format ip:port for each line)')
+    parser.add_argument('--output-directory', default='.', type=str, help='Path to the output directory')
+    parser.add_argument('--use-progress-bar', action='store_true', default=False, help='should show progress bar')
     parser.add_argument('--max-peers', type=int, default=12, help='Max connected peers')
     args = parser.parse_args()
 
     # init logger and argument parser
     logging_level = LOGGING_NONE
-    if args.no_progress_bar:
+    if not args.use_progress_bar:
         logging_level = logging.DEBUG
 
     logging.basicConfig(level=logging_level,
@@ -33,7 +31,7 @@ def main():
 
     # Create client from the BitTorrent Meta File
     torrent_client = TorrentClient(torrent=args.torrent, max_peers=args.max_peers,
-                                   no_progress_bar=args.no_progress_bar, peers_file=args.peers,
+                                   use_progress_bar=args.use_progress_bar, peers_file=args.peers,
                                    output_dir=args.output_directory)
 
     # Start downloading the file

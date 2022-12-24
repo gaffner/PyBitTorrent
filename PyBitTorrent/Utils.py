@@ -9,13 +9,14 @@ from PyBitTorrent.Peer import Peer
 console = Console()
 
 
-def read_peers_from_file(peers_file):
+def read_peers_from_file(peers_file_path):
     """
     Read the peers ip and port from the peers file
     """
     peers = []
+    with open(peers_file_path, 'rb') as peers_file:
+        connections = peers_file.readlines()
 
-    connections = peers_file.readlines()
     for connection in connections:
         ip, port = connection.decode().strip("\r\n").split(":")
         port = int(port)

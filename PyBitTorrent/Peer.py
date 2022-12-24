@@ -73,7 +73,7 @@ class Peer:
         if have.index < self.bitfield.length:
             self.bitfield[have.index] = True
         else:
-            logging.getLogger("BitTorrent").critical(
+            logging.getLogger("BitTorrent").info(
                 f"Have message {have.index} smaller then {self.bitfield.length}"
             )
 

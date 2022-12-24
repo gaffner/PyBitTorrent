@@ -45,17 +45,18 @@ ITERATION_SLEEP_INTERVAL = 0.001
 
 class TorrentClient:
     def __init__(
-        self, torrent, max_peers=MAX_PEERS, no_progress_bar=True, peers_file=None, output_dir='.'
+            self, torrent: str, max_peers: int = MAX_PEERS, use_progress_bar: bool = True, peers_file: str = None,
+            output_dir: str = '.'
     ):
         self.peer_manager: PeersManager = PeersManager(max_peers)
         self.tracker_manager: TrackerManager
         self.id: bytes = generate_peer_id()
         self.listener_socket: socket.socket = socket.socket()
         self.port: int = LISTENING_PORT
-        self.peers_file = peers_file
+        self.peers_file: str = peers_file
         self.pieces: List[Piece] = []
         self.should_continue = True
-        self.use_progress_bar = not no_progress_bar
+        self.use_progress_bar = use_progress_bar
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
         self.piece_manager = DiskManager(os.path.join(output_dir, self.torrent.file_name))
@@ -87,7 +88,7 @@ class TorrentClient:
             if len(peers) == 0:
                 raise Exception("No peers found")
 
-        logging.getLogger("BitTorrent").critical(f"Number of peers: {len(peers)}")
+        logging.getLogger("BitTorrent").info(f"Number of peers: {len(peers)}")
 
         self.peer_manager.add_peers(peers)
         handshakes = Thread(
@@ -105,8 +106,8 @@ class TorrentClient:
     def progress_download(self):
         if self.use_progress_bar:
             for _ in progress.track(
-                range(len(self.pieces)),
-                description=f"Downloading {self.torrent.file_name}",
+                    range(len(self.pieces)),
+                    description=f"Downloading {self.torrent.file_name}",
             ):
                 self.handle_messages()
         else:
@@ -125,7 +126,7 @@ class TorrentClient:
                 time.sleep(2)
                 continue
             except socket.error as e:
-                logging.getLogger("BitTorrent").critical(f"Unknown socket error: {e}")
+                logging.getLogger("BitTorrent").info(f"Unknown socket error: {e}")
                 continue
 
             for peer, message in messages.items():
@@ -169,9 +170,9 @@ class TorrentClient:
 
         while self.should_continue:
             self.request_current_block()
-            time.sleep(ITERATION_SLEEP_INTERVAL) # wait between each piece request
+            time.sleep(ITERATION_SLEEP_INTERVAL)  # wait between each piece request
 
-        logging.getLogger("BitTorrent").critical(f"Exiting the requesting loop...")
+        logging.getLogger("BitTorrent").info(f"Exiting the requesting loop...")
         self.piece_manager.close()
 
     def request_current_block(self):

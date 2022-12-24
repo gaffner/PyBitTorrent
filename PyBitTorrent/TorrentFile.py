@@ -15,8 +15,10 @@ class TorrentFile:
         this important value will later use us in peer retrieve
         process and in the handshakes process.
         """
-        logging.getLogger("BitTorrent").critical("Start reading from BitTorrent file")
-        torrent_data = torrent.read()
+        logging.getLogger("BitTorrent").info("Start reading from BitTorrent file")
+        with open(torrent, 'rb') as torrent_file:
+            torrent_data = torrent_file.read()
+
         self.config = bdecode(torrent_data)
         self.info = self.config["info"]
         self.hash = hashlib.sha1(bencode(self.info)).digest()
@@ -24,7 +26,6 @@ class TorrentFile:
         self.file_name = self.config["info"]["name"]
         self.length = 0
         self.print_configuration()
-        torrent.close()
 
         # Calculate the total length
         if "files" in self.info.keys():
