@@ -1,9 +1,9 @@
 import logging
+import os
 import socket
 import time
 from threading import Thread
 from typing import List
-import os
 
 from rich import progress
 
@@ -41,6 +41,12 @@ MAX_LISTENING_PORT = 6889
 MAX_PEERS = 12
 REQUEST_INTERVAL = 0.2
 ITERATION_SLEEP_INTERVAL = 0.001
+LOGGING_NONE = 100
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S'
+                    )
 
 
 class TorrentClient:
@@ -57,6 +63,9 @@ class TorrentClient:
         self.pieces: List[Piece] = []
         self.should_continue = True
         self.use_progress_bar = use_progress_bar
+        if use_progress_bar:
+            logging.getLogger("BitTorrent").setLevel(LOGGING_NONE)
+
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
         self.piece_manager = DiskManager(os.path.join(output_dir, self.torrent.file_name))

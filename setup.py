@@ -1,8 +1,8 @@
 from setuptools import setup
 
 
-with open("README.md", "rb") as readme:
-    long_description = readme.read().decode()
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
 
 setup(
     name='PyBitTorrent',
@@ -14,11 +14,10 @@ setup(
     description='Download torrent files according to BitTorrent specifications',
     long_description=long_description,
     install_requires=[
-        'bcoding==1.5',
+        'bcoding~=1.5',
         'bitstring~=4.0.1',
         'rich~=12.6.0',
         'requests~=2.22.0',
         'bcoding~=1.5'
     ]
-
 )
