@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Better readme.md">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/PKG-INFO" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/requires.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/requires.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/PiecesManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PiecesManager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +92,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/Client.py" />
-      <option name="PARAMETERS" value="--torrent $USER_HOME$/Downloads/minecraft.torrent" />
+      <option name="PARAMETERS" value="--torrent $PROJECT_DIR$/../myfolder2_try.torrent" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -321,18 +320,11 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/PyBitTorrent/Bittorrent.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/PyBitTorrent/PiecesManager.py</url>
+          <line>38</line>
+          <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
-      <default-breakpoints>
-        <breakpoint type="python-exception">
-          <properties notifyOnTerminate="true" exception="BaseException">
-            <option name="notifyOnTerminate" value="true" />
-          </properties>
-        </breakpoint>
-      </default-breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">

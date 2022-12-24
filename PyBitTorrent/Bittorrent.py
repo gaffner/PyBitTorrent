@@ -43,7 +43,7 @@ REQUEST_INTERVAL = 0.2
 ITERATION_SLEEP_INTERVAL = 0.001
 LOGGING_NONE = 100
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S'
                     )
@@ -68,7 +68,7 @@ class TorrentClient:
 
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
-        self.piece_manager = DiskManager(os.path.join(output_dir, self.torrent.file_name))
+        self.piece_manager = DiskManager(output_dir, self.torrent)
         # create tracker for each url of tracker in the config file
         trackers = []
         if "announce" in self.torrent.config:
