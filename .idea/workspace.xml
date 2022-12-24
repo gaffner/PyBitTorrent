@@ -6,7 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Using tempfile">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/PKG-INFO" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/requires.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/requires.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/PyBitTorrent-0.4.0-py3-none-any.whl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/PyBitTorrent-0.4.0.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

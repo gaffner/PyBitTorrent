@@ -14,12 +14,12 @@ That's it!
 The TorrentClient accepts the following parameters:
 
 ~~~python
-    TorrentClient(
+TorrentClient(
     torrent: str,
-max_peers: int,
-use_progress_bar: bool,
-peers_file: str,
-output_dir: str,
+    max_peers: int,
+    use_progress_bar: bool,
+    peers_file: str,
+    output_dir: str,
 )
 ~~~
 
@@ -122,4 +122,4 @@ python examples/Client.py --torrent "~/Downloads/Big Buck Bunny (1920x1080 h.264
 ### Important notes:
 * **We are a dirty Leecher:** The current implementation is a _leecher_. That's mean you can only *Download* file, and not *upload* anything. You can conclude from that that other peers might see that in a bad eye and therefore give you a lower rate and bandwidth, and as a result you won't *unchoked* by them, resulting lower speed rate comparing to popular torrent clients. Keep in mind that the infrastructure for acting as peer/seeder has been laid, so implement it should be easy.
 * **statistic bug:** In the current architecture of the program, it is multi threaded. it seems that it cause some undefined bug in interacting with the `select` function in the `receive_messages` of the `PeersManager`. it mean stuck messages, that get released after the stuck peer will send any message. You sometime experience it when you see that all the peers are choked for few seconds/minutes, when in fact they are not.
-* **over memory use in big torrent:** if the given torrent file contain multiply folders, the actual content is written to a temp file using the tempfile library. afterwards, we read chunks in the size of each inner file, and write them to the correct path. this `read` calls can cause over memory use in big torrents. we can avoid that by not copy the bytes using this function, but using other only disk-operation function, like the `dd` command. I haven't found this one yet.  
+* **over memory usage in big torrent:** if the given torrent file contain multiply folders, the actual content is written to a temp file using the tempfile library. afterwards, we read chunks in the size of each inner file, and write them to the correct path. this `read` calls can cause over memory use in big torrents. we can avoid that by not copy the bytes using this function, but using other only disk-operation function, like the `dd` command. I haven't found this one yet.  
