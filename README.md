@@ -1,7 +1,7 @@
 # PyBitTorrent
 ### A Python package for download torrent files.
 
-### How to use:
+## How to use:
 
 ~~~python
 from PyBitTorrent import TorrentClient
@@ -114,9 +114,8 @@ python examples/Client.py --torrent "~/Downloads/Big Buck Bunny (1920x1080 h.264
 * Then, we try to connect each one of them, until the value of `max_peers` achieved. The handshakes happen in a *poll* of threads. each thread contain `MAX_HANDSHAKE_THREADS` of peers to handshake with. the `number_of_polls` calculated according to the length of the given peers divided by the `MAX_HANDSHAKE_THREADS`, so we can cover all the peers. note that this process happens in <mark>parallel to the other 2 threads</mark>. continue to read for more details.
 * Right after lunching the handshakes thread polls, we start listening for incomming message using the `handle_messages` function, that calling the `receive_messages` in the `PeersManager` in his turn. This function will search for readable socket, and then parse the data to one of the `PyBitTorrent.Message` classes. This contains one of the two main threads of the program, that continue until completion of the download. 
 * Meanwhile we can start requesting for pieces. we do that by calling the function `piece_requester` in different threads. this function search after connected peer *(Unchoked connected peer)* that have the piece index we currently in. **The current strategy for piece picking is what we can call *Asynchronous chronological***. Means that we start requesting for piece index 0, 1, 2, until the end of the file, but not stuck the program if one of them is not full yet. **Better strategy can be implemented**, like *Rarest-Piece-First*, But i noticed that most of the torrent download process is in front of seeders, so i thought it will be useless right now. But of curs in communicating with actual peer (like in a new torrent file that just explode the internet), Smarter strategies can help.
-
 ### Charted flow of the program:
-![Program Flow](https://i.imgur.com/texAmbM.png)
+![Program Flow](https://i.imgur.com/yuf03AS.png)
 
 ------
 ### Important notes:
