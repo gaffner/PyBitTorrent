@@ -6,7 +6,7 @@ with open("README.md", "rb") as readme:
 
 setup(
     name='PyBitTorrent',
-    version='0.2.0',
+    version='0.4.0',
     author='Gaffner',
     author_email='gefen102@gmail.com',
     packages=['PyBitTorrent'],
