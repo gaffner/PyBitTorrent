@@ -55,7 +55,6 @@ class PeersManager:
         NOTE: this function is BLOCKING.
         it waits until handshake response received, and failed otherwise.
         """
-        logging.getLogger('BitTorrent').debug("Started: {}".format(threading.currentThread()))
         try:
             peer.connect()
         except PeerConnectionFailed:

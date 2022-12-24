@@ -3,6 +3,7 @@ import socket
 import time
 from threading import Thread
 from typing import List
+import os
 
 from rich import progress
 
@@ -42,9 +43,9 @@ REQUEST_INTERVAL = 0.2
 ITERATION_SLEEP_INTERVAL = 0.001
 
 
-class BitTorrentClient:
+class TorrentClient:
     def __init__(
-        self, torrent, max_peers=MAX_PEERS, no_progress_bar=False, peers_file=None
+        self, torrent, max_peers=MAX_PEERS, no_progress_bar=True, peers_file=None, output_dir='.'
     ):
         self.peer_manager: PeersManager = PeersManager(max_peers)
         self.tracker_manager: TrackerManager
@@ -57,7 +58,7 @@ class BitTorrentClient:
         self.use_progress_bar = not no_progress_bar
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
-        self.piece_manager = DiskManager("{}.written".format(self.torrent.file_name))
+        self.piece_manager = DiskManager(os.path.join(output_dir, self.torrent.file_name))
         # create tracker for each url of tracker in the config file
         trackers = []
         if "announce" in self.torrent.config:
