@@ -1,10 +1,8 @@
 import logging
 import os
-
+import tempfile
 from PyBitTorrent import TorrentFile
 
-
-# TODO: use the tmpfile library
 
 class DiskManager:
     def __init__(self, output_directory: str, torrent: TorrentFile):
@@ -13,7 +11,7 @@ class DiskManager:
         self.written = 0
         self.multi_part = "files" in self.torrent.info.keys()
         if self.multi_part:
-            self.file = open('blob.tmp', "wb")
+            self.file = tempfile.TemporaryFile()
         else:
             self.file = open(self.torrent.file_name, "wb")  # Regular one single file
 
@@ -34,10 +32,7 @@ class DiskManager:
         Files structure specified in the torent file
         """
         # If torrent contain multiple file, split them
-        self.file.close()
-
         if self.multi_part:
-            self.file = open(self.file.name, "rb")
             self.file.seek(0)  # We start reading the file from the beginning
             for file in self.torrent.info['files']:
                 # Calculate the full path of each file
@@ -55,5 +50,4 @@ class DiskManager:
                 f.write(file_data)
                 f.close()
 
-            # Delete the blob file
-            self.file.close()
+        self.file.close()

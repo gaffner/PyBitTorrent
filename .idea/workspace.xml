@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Better readme.md">
+    <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Support multi files torrent">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent/PiecesManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PiecesManager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,7 +91,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/Client.py" />
-      <option name="PARAMETERS" value="--torrent $PROJECT_DIR$/../myfolder2_try.torrent" />
+      <option name="PARAMETERS" value="--torrent $PROJECT_DIR$/../mega.torrent" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -273,7 +272,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671873071494</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Support multi files torrent">
+      <created>1671890403745</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1671890403745</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -314,14 +320,15 @@
     <MESSAGE value="Fixed compact mode" />
     <MESSAGE value="Added" />
     <MESSAGE value="Added support for output directory" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added support for output directory" />
+    <MESSAGE value="Support multi files torrent" />
+    <option name="LAST_COMMIT_MESSAGE" value="Support multi files torrent" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/PyBitTorrent/PiecesManager.py</url>
-          <line>38</line>
+          <line>34</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
