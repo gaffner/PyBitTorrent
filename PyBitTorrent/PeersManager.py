@@ -129,7 +129,7 @@ class PeersManager:
             raise OutOfPeers
 
         # Check for new readable sockets from the connected peers
-        sockets = [peer.socket for peer in self.connected_peers]
+        sockets = [peer.socket for peer in self.connected_peers] # The bug resides in here...
         readable, _, _ = select.select(sockets, [], [])
 
         peers_to_message = {}

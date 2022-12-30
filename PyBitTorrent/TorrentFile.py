@@ -3,14 +3,14 @@ import logging
 from copy import deepcopy
 
 import rich
-from bcoding import bencode, bdecode
+from PyBitTorrent.bcoder import bencode, bdecode
 
 
 class TorrentFile:
     def __init__(self, torrent):
         """
         Initiate the TorrentFile object using the
-        bcoding library that parse the .torrent file,
+        bcoder util that parse the .torrent file,
         and then calculate the sha1 value of the info dict.
         this important value will later use us in peer retrieve
         process and in the handshakes process.

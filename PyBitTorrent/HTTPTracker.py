@@ -2,11 +2,11 @@ import logging
 from typing import List
 
 import requests
-from bcoding import bdecode
 
 from PyBitTorrent.Peer import Peer
 from PyBitTorrent.TorrentFile import TorrentFile
 from PyBitTorrent.Tracker import Tracker
+from PyBitTorrent.bcoder import bdecode
 
 
 class HTTPTracker(Tracker):

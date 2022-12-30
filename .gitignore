@@ -6,3 +6,5 @@ __pycache__/
 *.bin
 *.written
 *.copy
+PyBitTorrent.egg-info/
+dist/

@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='PyBitTorrent',
-    version='0.5.6',
+    version='0.7.0',
     author='Gaffner',
     author_email='gefen102@gmail.com',
     url="https://github.com/gaffner/PyBitTorrent",
@@ -22,10 +22,8 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        'bcoding~=1.5',
         'bitstring~=4.0.1',
         'rich~=12.6.0',
         'requests~=2.22.0',
-        'bcoding~=1.5'
     ]
 )

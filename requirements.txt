@@ -1,4 +1,3 @@
-bcoding==1.5
 bitstring==4.0.1
 certifi==2022.12.7
 chardet==3.0.4

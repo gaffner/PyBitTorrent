@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Using tempfile">
+      <change afterPath="$PROJECT_DIR$/PyBitTorrent/bcoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/PKG-INFO" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/requires.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/requires.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/PyBitTorrent-0.4.0-py3-none-any.whl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/PyBitTorrent-0.4.0.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/HTTPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/HTTPTracker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/TorrentFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/TorrentFile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,6 +41,10 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/.local/lib/python3.8/site-packages/bcoding.py" root0="SKIP_INSPECTION" />
+    <setting file="file:///usr/lib/python3.8/os.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -50,15 +59,15 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/PyBitTorrent" />
+    <property name="last_opened_file_path" value="$USER_HOME$/.local/lib/python3.8/site-packages/bcoding.py" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/PyBitTorrent" />
       <recent name="$PROJECT_DIR$/tests" />
       <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/PyBitTorrent" />
     </key>
   </component>
   <component name="RunManager" selected="Python.interpreter">
@@ -96,7 +105,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/Client.py" />
-      <option name="PARAMETERS" value="--torrent $PROJECT_DIR$/../mega.torrent" />
+      <option name="PARAMETERS" value="--torrent $USER_HOME$/Downloads/ubuntu-22.10-desktop-amd64.iso.torrent" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -337,15 +346,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Using tempfile" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/PyBitTorrent/PiecesManager.py</url>
-          <line>34</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="block.offset" language="Python" />

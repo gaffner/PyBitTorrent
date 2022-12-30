@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: PyBitTorrent
-Version: 0.5.6
+Version: 0.7.0
 Summary: Download torrent files according to BitTorrent specifications
 Home-page: https://github.com/gaffner/PyBitTorrent
 Author: Gaffner
