@@ -40,5 +40,6 @@ class TorrentFile:
         the torrent file in an nice-to-look way using rich.
         """
         config = deepcopy(self.config)
+
         config["info"]["pieces"] = ""
         rich.print(config)

@@ -19,6 +19,7 @@ PyBitTorrent/UDPTracker.py
 PyBitTorrent/UDPTrackerMessage.py
 PyBitTorrent/Utils.py
 PyBitTorrent/__init__.py
+PyBitTorrent/bcoder.py
 PyBitTorrent.egg-info/PKG-INFO
 PyBitTorrent.egg-info/SOURCES.txt
 PyBitTorrent.egg-info/dependency_links.txt

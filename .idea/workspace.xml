@@ -5,18 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80fc1bf8-6726-40f7-80e6-b8528596ab5f" name="Default Changelist" comment="Using tempfile">
-      <change afterPath="$PROJECT_DIR$/PyBitTorrent/bcoder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/PyBitTorrent.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PyBitTorrent.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/PKG-INFO" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/SOURCES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/SOURCES.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/dependency_links.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/dependency_links.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/requires.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/requires.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/Bittorrent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent/HTTPTracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/HTTPTracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/PeersManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyBitTorrent.egg-info/top_level.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent.egg-info/top_level.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyBitTorrent/TorrentFile.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/TorrentFile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyBitTorrent/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyBitTorrent/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,10 +38,6 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/.local/lib/python3.8/site-packages/bcoding.py" root0="SKIP_INSPECTION" />
-    <setting file="file:///usr/lib/python3.8/os.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -99,7 +93,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="/usr/bin/python3.8" />
+      <option name="SDK_HOME" value="C:\Python39\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -114,8 +108,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.interpreter" />
       <item itemvalue="Python.Bittorrent" />
+      <item itemvalue="Python.interpreter" />
     </list>
     <recent_temporary>
       <list>
@@ -316,6 +310,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added basic classes" />
@@ -346,6 +341,20 @@
     <option name="LAST_COMMIT_MESSAGE" value="Using tempfile" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PyBitTorrent/HTTPTracker.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PyBitTorrent/Message.py</url>
+          <line>94</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="block.offset" language="Python" />
