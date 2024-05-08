@@ -7,10 +7,13 @@ from PyBitTorrent.Peer import Peer
 from PyBitTorrent.TorrentFile import TorrentFile
 from PyBitTorrent.Tracker import Tracker
 from PyBitTorrent.bcoder import bdecode
+from PyBitTorrent.Exceptions import UnexpectedResponse
+from PyBitTorrent.Configuration import (
+    TIMEOUT
+)
 
 
 class HTTPTracker(Tracker):
-    timeout = 3  # seconds
 
     def get_peers(self, peer_id: bytes, port: int, torrent: TorrentFile) -> List[Peer]:
         """
@@ -28,15 +31,14 @@ class HTTPTracker(Tracker):
             "port": port,
             "left": torrent.length,
             "event": "started",
+            "timeout": TIMEOUT
         }
         try:
-            raw_response = requests.get(
-                self.url, params=params, timeout=HTTPTracker.timeout
-            ).content
+            raw_response = requests.get(self.url, params=params).content
             tracker_response = bdecode(raw_response)
             logging.getLogger("BitTorrent").info(f"success in scraping {self.url}")
             print(tracker_response)
-        except (requests.exceptions.RequestException, TypeError):
+        except (requests.exceptions.RequestException, TypeError, UnexpectedResponse):
             logging.getLogger("BitTorrent").error(f"Failed to scrape {self.url}")
             return []
 

@@ -3,6 +3,8 @@ from string import digits
 from typing import List, Dict, Union
 import functools
 
+from PyBitTorrent.Exceptions import UnexpectedResponse
+
 END_CHAR = b'e'
 
 
@@ -47,8 +49,13 @@ def get_dict(data) -> Dict:
     key: bytes = bdecode(data)
     dictionary = {}
     while key:
-        value = bdecode(data)
-        dictionary[key] = value
+        if type(key) == dict :
+            for k, v in key.items() :
+                if k not in dictionary :
+                    dictionary[k] = v
+        else :
+            value = bdecode(data)
+            dictionary[key] = value
 
         key = bdecode(data)
 
@@ -86,7 +93,11 @@ def bdecode(data: bytes) -> Union[bytes, int, Dict, List]:
     if first_char == END_CHAR:
         return None
 
-    decoder = TYPES[first_char]
+    try:
+        decoder = TYPES[first_char]
+    except:
+        raise UnexpectedResponse
+
     value = decoder(data)
     return value
 

@@ -16,8 +16,9 @@ from PyBitTorrent.Exceptions import (
 )
 from PyBitTorrent.Message import MessageTypes
 from PyBitTorrent.Peer import Peer
-
-MAX_HANDSHAKE_THREADS = 80
+from PyBitTorrent.Configuration import (
+    MAX_HANDSHAKE_THREADS
+)
 
 
 class PeersManager:

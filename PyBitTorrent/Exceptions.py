@@ -44,3 +44,15 @@ class NoPeersHavePiece(BasicException):
 
 class AllPeersChocked(BasicException):
     pass
+
+
+class KeyNotFound(BasicException):
+    pass
+
+
+class NoTrackersFound(BasicException):
+    pass
+
+
+class UnexpectedResponse(BasicException):
+    pass

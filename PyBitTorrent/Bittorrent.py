@@ -33,14 +33,15 @@ from PyBitTorrent.PiecesManager import DiskManager
 from PyBitTorrent.TorrentFile import TorrentFile
 from PyBitTorrent.TrackerFactory import TrackerFactory
 from PyBitTorrent.TrackerManager import TrackerManager
-from PyBitTorrent.Utils import generate_peer_id, read_peers_from_file
-
-LISTENING_PORT = 6881
-MAX_LISTENING_PORT = 6889
-MAX_PEERS = 12
-REQUEST_INTERVAL = 0.2
-ITERATION_SLEEP_INTERVAL = 0.001
-LOGGING_NONE = 100
+from PyBitTorrent.Utils import generate_peer_id, read_peers_from_input
+from PyBitTorrent.Exceptions import NoTrackersFound
+from PyBitTorrent.Configuration import (
+    LISTENING_PORT,
+    MAX_PEERS,
+    ITERATION_SLEEP_INTERVAL,
+    LOGGING_LEVEL,
+    TIMEOUT
+)
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
@@ -50,20 +51,24 @@ logging.basicConfig(level=logging.DEBUG,
 
 class TorrentClient:
     def __init__(
-            self, torrent: str, max_peers: int = MAX_PEERS, use_progress_bar: bool = True, peers_file: str = None,
+            self, torrent: str,
+            max_peers: int = MAX_PEERS,
+            use_progress_bar: bool = True,
+            peers_input: str = None,
             output_dir: str = '.'
     ):
         self.peer_manager: PeersManager = PeersManager(max_peers)
         self.tracker_manager: TrackerManager
         self.id: bytes = generate_peer_id()
         self.listener_socket: socket.socket = socket.socket()
+        self.listener_socket.settimeout(TIMEOUT)
         self.port: int = LISTENING_PORT
-        self.peers_file: str = peers_file
+        self.peers_input: str = peers_input
         self.pieces: List[Piece] = []
         self.should_continue = True
         self.use_progress_bar = use_progress_bar
         if use_progress_bar:
-            logging.getLogger("BitTorrent").setLevel(LOGGING_NONE)
+            logging.getLogger("BitTorrent").setLevel(LOGGING_LEVEL)
 
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
@@ -80,17 +85,19 @@ class TorrentClient:
             )
             trackers += new_trackers
 
+        if len(trackers) == 0:
+            raise NoTrackersFound
+
         self.tracker_manager = TrackerManager(trackers)
         file_size, piece_size = self.torrent.length, self.torrent.piece_size
         self.pieces = create_pieces(file_size, piece_size)
         self.number_of_pieces = len(self.pieces)
 
-    def start(self):
+    def setup(self):
         # Send HTTP/UDP Requests to all Trackers, requesting for peers
-
-        if self.peers_file:
-            logging.getLogger("BitTorrent").info("Reading peers from file")
-            peers = read_peers_from_file(self.peers_file)
+        if self.peers_input:
+            logging.getLogger("BitTorrent").info("Reading peers from input")
+            peers = read_peers_from_input(self.peers_input)
         else:
             peers = self.tracker_manager.get_peers(self.id, self.port, self.torrent)
             if len(peers) == 0:
@@ -99,6 +106,11 @@ class TorrentClient:
         logging.getLogger("BitTorrent").info(f"Number of peers: {len(peers)}")
 
         self.peer_manager.add_peers(peers)
+
+    def start(self):
+        if len(self.peer_manager.peers) == 0:
+            self.setup()
+
         handshakes = Thread(
             target=self.peer_manager.send_handshakes, args=(self.id, self.torrent.hash)
         )
@@ -178,7 +190,7 @@ class TorrentClient:
 
         while self.should_continue:
             self.request_current_block()
-            time.sleep(ITERATION_SLEEP_INTERVAL)  # wait between each piece request
+            time.sleep(ITERATION_SLEEP_INTERVAL)
 
         logging.getLogger("BitTorrent").info(f"Exiting the requesting loop...")
         self.piece_manager.close()
