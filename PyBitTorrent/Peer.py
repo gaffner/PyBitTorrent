@@ -12,10 +12,7 @@ from PyBitTorrent.Exceptions import (
 )
 from PyBitTorrent.Message import Message, Handshake, BitField, HaveMessage
 from PyBitTorrent.MessageFactory import MessageFactory
-from PyBitTorrent.Configuration import (
-    TIMEOUT,
-    HANDSHAKE_STRIPPED_SIZE
-)
+from PyBitTorrent.Configuration import CONFIGURATION
 
 
 class Peer:
@@ -34,7 +31,7 @@ class Peer:
         else:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.socket.settimeout(TIMEOUT)
+        self.socket.settimeout(CONFIGURATION.timeout)
 
     def __str__(self):
         return f"{self.id} {self.ip}:{self.port}"
@@ -115,7 +112,7 @@ class Peer:
 
         else:
             protocol_len: int = struct.unpack(">B", packet_length)[0]
-            handshake_bytes = self.socket.recv(protocol_len + HANDSHAKE_STRIPPED_SIZE)
+            handshake_bytes = self.socket.recv(protocol_len + CONFIGURATION.handshake_stripped_size)
 
             return MessageFactory.create_handshake_message(
                 packet_length + handshake_bytes

@@ -17,7 +17,7 @@ class Configuration:
         self.max_handshake_threads: int = 80
         self.udp_tracker_receive_size: int = 16384
         self.handshake_stripped_size: int = 48
-        self.default_connecion_id: int = 0X41727101980
+        self.default_connection_id: int = 0X41727101980
         self.compact_value_num_bytes: int = 6
         self.tcp_only: bool = False
 
@@ -32,9 +32,16 @@ class Configuration:
 
             if type(self.__dict__[key]) != type(value):
                 try:
-                    self_type = type(self.__dict__[key])
-                    value = globals()["__builtins__"].__dict__[self_type](value)
+                    self_type = type(self.__dict__[key]).__name__
+                    if self_type == "int" :
+                        value = globals()["__builtins__"][self_type](value, 0)
+                    else :
+                        value = globals()["__builtins__"][self_type](value)
                 except:
                     raise InvalidConfigurationValue
 
             self.__dict__[key] = value
+
+
+CONFIGURATION = Configuration()
+CONFIGURATION.load()

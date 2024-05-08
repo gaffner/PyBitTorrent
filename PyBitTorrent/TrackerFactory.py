@@ -5,9 +5,7 @@ from PyBitTorrent.Exceptions import UnknownTracker
 from PyBitTorrent.HTTPTracker import HTTPTracker
 from PyBitTorrent.Tracker import Tracker
 from PyBitTorrent.UDPTracker import UDPTracker
-from PyBitTorrent.Configuration import (
-    TCP_ONLY
-)
+from PyBitTorrent.Configuration import CONFIGURATION
 
 
 class TrackerFactory:
@@ -23,7 +21,7 @@ class TrackerFactory:
         if "http" in parsed.scheme.lower():
             return HTTPTracker(url)
         elif "udp" in parsed.scheme.lower():
-            if not TCP_ONLY :
+            if not CONFIGURATION.tcp_only :
                 return UDPTracker(url)
         else:
             raise UnknownTracker(url)

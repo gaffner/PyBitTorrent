@@ -8,9 +8,7 @@ from PyBitTorrent.TorrentFile import TorrentFile
 from PyBitTorrent.Tracker import Tracker
 from PyBitTorrent.bcoder import bdecode
 from PyBitTorrent.Exceptions import UnexpectedResponse
-from PyBitTorrent.Configuration import (
-    TIMEOUT
-)
+from PyBitTorrent.Configuration import CONFIGURATION
 
 
 class HTTPTracker(Tracker):
@@ -31,7 +29,7 @@ class HTTPTracker(Tracker):
             "port": port,
             "left": torrent.length,
             "event": "started",
-            "timeout": TIMEOUT
+            "timeout": CONFIGURATION.timeout
         }
         try:
             raw_response = requests.get(self.url, params=params).content

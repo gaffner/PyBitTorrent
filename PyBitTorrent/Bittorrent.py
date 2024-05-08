@@ -35,13 +35,7 @@ from PyBitTorrent.TrackerFactory import TrackerFactory
 from PyBitTorrent.TrackerManager import TrackerManager
 from PyBitTorrent.Utils import generate_peer_id, read_peers_from_input
 from PyBitTorrent.Exceptions import NoTrackersFound
-from PyBitTorrent.Configuration import (
-    LISTENING_PORT,
-    MAX_PEERS,
-    ITERATION_SLEEP_INTERVAL,
-    LOGGING_LEVEL,
-    TIMEOUT
-)
+from PyBitTorrent.Configuration import CONFIGURATION
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
@@ -52,7 +46,7 @@ logging.basicConfig(level=logging.DEBUG,
 class TorrentClient:
     def __init__(
             self, torrent: str,
-            max_peers: int = MAX_PEERS,
+            max_peers: int = CONFIGURATION.max_peers,
             use_progress_bar: bool = True,
             peers_input: str = None,
             output_dir: str = '.'
@@ -61,14 +55,14 @@ class TorrentClient:
         self.tracker_manager: TrackerManager
         self.id: bytes = generate_peer_id()
         self.listener_socket: socket.socket = socket.socket()
-        self.listener_socket.settimeout(TIMEOUT)
-        self.port: int = LISTENING_PORT
+        self.listener_socket.settimeout(CONFIGURATION.timeout)
+        self.port: int = CONFIGURATION.listening_port
         self.peers_input: str = peers_input
         self.pieces: List[Piece] = []
         self.should_continue = True
         self.use_progress_bar = use_progress_bar
         if use_progress_bar:
-            logging.getLogger("BitTorrent").setLevel(LOGGING_LEVEL)
+            logging.getLogger("BitTorrent").setLevel(CONFIGURATION.logging_level)
 
         # decode the config file and assign it
         self.torrent = TorrentFile(torrent)
@@ -193,7 +187,7 @@ class TorrentClient:
 
         while self.should_continue:
             self.request_current_block()
-            time.sleep(ITERATION_SLEEP_INTERVAL)
+            time.sleep(CONFIGURATION.iteration_sleep_interval)
 
         logging.getLogger("BitTorrent").info(f"Exiting the requesting loop...")
         self.piece_manager.close()

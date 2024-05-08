@@ -2,14 +2,12 @@ import logging
 import random
 import struct
 
-from PyBitTorrent.Configuration import (
-    DEFAULT_CONNECTION_ID
-)
+from PyBitTorrent.Configuration import CONFIGURATION
 
 
 class Connection:
     def __init__(
-        self, transaction_id=None, connection_id=DEFAULT_CONNECTION_ID, action=0
+        self, transaction_id=None, connection_id=CONFIGURATION.default_connection_id, action=0
     ):
         self.transaction_id = transaction_id
         self.connection_id = connection_id

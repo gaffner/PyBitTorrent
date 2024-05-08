@@ -7,10 +7,7 @@ from PyBitTorrent.Peer import Peer
 from PyBitTorrent.TorrentFile import TorrentFile
 from PyBitTorrent.Tracker import Tracker
 from PyBitTorrent.UDPTrackerMessage import Connection, Announce, AnnounceResult
-from PyBitTorrent.Configuration import (
-    TIMEOUT,
-    UDP_TRACKER_RECEIVE_SIZE
-)
+from PyBitTorrent.Configuration import CONFIGURATION
 
 
 class UDPTracker(Tracker):
@@ -33,9 +30,9 @@ class UDPTracker(Tracker):
             sock.sendto(connection_request.to_bytes(), tracker_address)
 
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            sock.settimeout(TIMEOUT)
+            sock.settimeout(CONFIGURATION.timeout)
 
-            response = sock.recv(UDP_TRACKER_RECEIVE_SIZE)  # Answer should be 16 bytes
+            response = sock.recv(CONFIGURATION.udp_tracker_receive_size)  # Answer should be 16 bytes
 
             connection_response = Connection.from_bytes(response)
             connection_id = connection_response.connection_id
@@ -50,7 +47,7 @@ class UDPTracker(Tracker):
             )
             sock.sendto(announce.to_bytes(), tracker_address)
 
-            response = sock.recv(UDP_TRACKER_RECEIVE_SIZE)  # Answer should be 98 bytes
+            response = sock.recv(CONFIGURATION.udp_tracker_receive_size)  # Answer should be 98 bytes
             announce_response: AnnounceResult = AnnounceResult.from_bytes(response)
 
             if announce_response.transaction_id != announce.transaction_id:
