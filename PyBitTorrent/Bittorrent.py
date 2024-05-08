@@ -85,6 +85,9 @@ class TorrentClient:
             )
             trackers += new_trackers
 
+        while None in trackers:
+            trackers.remove(None)
+
         if len(trackers) == 0:
             raise NoTrackersFound
 

@@ -1,45 +1,40 @@
-# Port to announce to tracker 
-# port section at: 
-#   https://wiki.theory.org/BitTorrent_Tracker_Protocol#Basic_Tracker_Announce_Request)
-LISTENING_PORT = 6881
+import json
 
-# Not implemented yet
-MAX_LISTENING_PORT = 6889
-
-# Maximun amount of peers to connect to
-MAX_PEERS = 12
-
-# Not implemented yet
-REQUEST_INTERVAL = 0.2
-
-# Interval between each piece request
-ITERATION_SLEEP_INTERVAL = 0.001
-
-# Logging level
-#   https://docs.python.org/3/library/logging.html#logging.Logger.setLevel
-LOGGING_LEVEL = 100
-
-# Timeout for every request made
-TIMEOUT = 3
-
-# Number of handshakes to make in each thread with fixed amount of peers
-# this value is inversely porportional to the number of threads created
-MAX_HANDSHAKE_THREADS = 80
+from PyBitTorrent.Exceptions import InvalidConfigurationValue
 
 
-# Experimental options, DO NOT CHANGE
+class Configuration:
 
-# Value to receive from UDP tracker requests
-UDP_TRACKER_RECEIVE_SIZE = 16384
+    def __init__(self, path: str = "./config.json"):
+        self.path: str = path
+        self.listening_port: int = 6881
+        self.max_listening_port: int = 6889
+        self.max_peers: int = 12
+        self.request_interval: float = 0.2
+        self.iteration_sleep_interval: float = 0.001
+        self.logging_level: int = 100
+        self.timeout: float = 3.0
+        self.max_handshake_threads: int = 80
+        self.udp_tracker_receive_size: int = 16384
+        self.handshake_stripped_size: int = 48
+        self.default_connecion_id: int = 0X41727101980
+        self.compact_value_num_bytes: int = 6
+        self.tcp_only: bool = False
 
-# Value to receive from peer requests, do not change
-HANDSHAKE_STRIPPED_SIZE = 48
+    def load(self):
+        with open(self.path, "r") as config:
+            raw = config.read()
 
-# Default connection ID for UDP tracker connections 
-DEFAULT_CONNECTION_ID = 0X41727101980
+        config = json.loads(raw)
+        for key, value in config.items():
+            if key not in self.__dict__.keys() or key.startswith("_"):
+                continue
 
-# Bytes to read each iteration of compacted peers response, do not change
-COMPACT_VALUE_NUM_BYTES = 6
+            if type(self.__dict__[key]) != type(value):
+                try:
+                    self_type = type(self.__dict__[key])
+                    value = globals()["__builtins__"].__dict__[self_type](value)
+                except:
+                    raise InvalidConfigurationValue
 
-# Use only TCP, ignore UDP
-TCP_ONLY = False
+            self.__dict__[key] = value
