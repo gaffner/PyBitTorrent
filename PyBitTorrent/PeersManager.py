@@ -16,8 +16,7 @@ from PyBitTorrent.Exceptions import (
 )
 from PyBitTorrent.Message import MessageTypes
 from PyBitTorrent.Peer import Peer
-
-MAX_HANDSHAKE_THREADS = 80
+from PyBitTorrent.Configuration import CONFIGURATION
 
 
 class PeersManager:
@@ -92,11 +91,11 @@ class PeersManager:
             )
             handshake_threads.append(thread)
 
-        number_of_polls = int(len(handshake_threads) / MAX_HANDSHAKE_THREADS) + 1
+        number_of_polls = int(len(handshake_threads) / CONFIGURATION.max_handshake_threads) + 1
 
         for i in range(1, number_of_polls + 1):
             logging.getLogger("BitTorrent").debug(f"Poll number {i}/{number_of_polls}")
-            poll = handshake_threads[:MAX_HANDSHAKE_THREADS]
+            poll = handshake_threads[:CONFIGURATION.max_handshake_threads]
 
             # Execute threads
             for thread in poll:
@@ -113,7 +112,7 @@ class PeersManager:
                 break
 
             # Slice the handshake threads
-            del handshake_threads[:MAX_HANDSHAKE_THREADS]
+            del handshake_threads[:CONFIGURATION.max_handshake_threads]
 
         logging.getLogger("BitTorrent").info(
             f"Total peers connected: {len(self.connected_peers)}"

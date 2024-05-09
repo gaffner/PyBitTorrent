@@ -10,7 +10,7 @@ def main():
 
     parser = ArgumentParser(main.__doc__)
     parser.add_argument('--torrent', type=str, help='Path of the Torrent file', required=True)
-    parser.add_argument('--peers', type=str, help='Path to file contain peers (in the format ip:port for each line)')
+    parser.add_argument('--peers', type=str, help='Path to file contain peers (in the format ip:port for each line) or string in the same format but delimited by commas')
     parser.add_argument('--output-directory', default='.', type=str, help='Path to the output directory')
     parser.add_argument('--use-progress-bar', action='store_true', default=False, help='should show progress bar')
     parser.add_argument('--max-peers', type=int, default=12, help='Max connected peers')

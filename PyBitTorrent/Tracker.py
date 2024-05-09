@@ -5,8 +5,7 @@ from typing import List
 
 from PyBitTorrent.Peer import Peer
 from PyBitTorrent.TorrentFile import TorrentFile
-
-COMPACT_VALUE_NUM_BYTES = 6
+from PyBitTorrent.Configuration import CONFIGURATION
 
 
 class Tracker(ABC):
@@ -24,10 +23,10 @@ class Tracker(ABC):
         if not peers_bytes:
             return []
 
-        for _ in range(len(peers_bytes) // COMPACT_VALUE_NUM_BYTES):
+        for _ in range(len(peers_bytes) // CONFIGURATION.compact_value_num_bytes):
             ip, port = struct.unpack_from("!iH", peers_bytes, offset)
             ip = socket.inet_ntoa(struct.pack("!i", ip))
-            offset += 6
+            offset += CONFIGURATION.compact_value_num_bytes
 
             peers.append(Peer(ip, port))
 

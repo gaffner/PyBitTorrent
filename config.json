@@ -1,0 +1,16 @@
+{
+	"_documentation": "https://github.com/gaffner/PyBitTorrent",
+	"listening_port": 6881,
+	"max_listening_port": 6889,
+	"max_peers": 12,
+	"request_interval": 0.2,
+	"iteration_sleep_interval": 0.001,
+	"logging_level": 100,
+	"timeout": 3.0,
+	"max_handshake_threads": 80,
+	"udp_tracker_receive_size": 16384,
+	"handshake_stripped_size": 48,
+	"default_connecion_id": "0x41727101980",
+	"compact_value_num_bytes": 6,
+	"tcp_only": false
+}

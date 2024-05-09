@@ -93,6 +93,27 @@ python examples/Client.py --torrent "~/Downloads/Big Buck Bunny (1920x1080 h.264
 ...
 ~~~
 
+## Configuration
+
+Non-existing options are ignored.
+
+`_documentation`: just the link for the documentation, all keys starting with `_` are going to be ignored.  
+`listening_port`: [port to announce to tracker](https://wiki.theory.org/BitTorrent_Tracker_Protocol#Basic_Tracker_Announce_Request).  
+`max_listening_port`: not implemented yet.  
+`max_peers`: maximun amount of peers to connect to.  
+`request_interval`: not implemented yet.  
+`interation_sleep_interval`: interval between each piece request.  
+`logging_level`: [logging level for Logger](https://docs.python.org/3/library/logging.html#logging.Logger.setLevel).  
+`timeout`: timeout for every request made.  
+`max_handshake_threads`: Number of handshakes to make in each thread with fixed amount of peers. This value is inversely porportional to the number of threads created.  
+
+### Experimental options (DO NOT CHANGE)
+`udp_handshake_threads`: bytes to read from UDP tracker requests.  
+`handshake_stripped_size`: value to receive from peer requests.  
+`default_connection_id`: default connection ID for UDP tracker connections.  
+`compact_value_num_bytes`: bytes to read each iteration of compacted peers response.  
+`tcp_only`: use only TCP, ignore UDP.  
+
 ## List of BitTorrent messages and their support
 
 | Type           | supported | id  |
@@ -113,7 +134,7 @@ python examples/Client.py --torrent "~/Downloads/Big Buck Bunny (1920x1080 h.264
 * At first, we retrieve all available peers, using the trackers from the `torrent` file, or from the `peers` file provided.
 * Then, we try to connect each one of them, until the value of `max_peers` achieved. The handshakes happen in a *poll* of threads. each thread contain `MAX_HANDSHAKE_THREADS` of peers to handshake with. the `number_of_polls` calculated according to the length of the given peers divided by the `MAX_HANDSHAKE_THREADS`, so we can cover all the peers. note that this process happens in <mark>parallel to the other 2 threads</mark>. continue to read for more details.
 * Right after launching the handshakes thread polls, we start listening for incomming messages using the `handle_messages` function, that calling the `receive_messages` in the `PeersManager` in his turn. This function will search for readable socket, and then parse the data to one of the `PyBitTorrent.Message` classes. This contains one of the two main threads of the program, that continue until completion of the download. 
-* Meanwhile we can start requesting for pieces. we do that by calling the function `piece_requester` in different threads. this function search after connected peer *(unchocked connected peer)* that have the piece index we currently in. **The current strategy for piece picking is what we can call *Asynchronous Chronological***. Means that we start requesting for piece index 0, 1, 2, until the end of the file, but don't stop the program if one of them is not full yet. **Better strategy can be implemented**, like *Rarest-Piece-First*, But i noticed that most of the torrent download process is in front of seeders, so i thought it will be useless right now. But of curs in communicating with actual peers (like in a new torrent file that just explode over the internet), smarter strategies can help.
+* Meanwhile we can start requesting for pieces. we do that by calling the function `piece_requester` in different threads. this function search after connected peer *(unchocked connected peer)* that have the piece index we currently in. **The current strategy for piece picking is what we can call *Asynchronous Chronological***. Means that we start requesting for piece index 0, 1, 2, until the end of the file, but don't stop the program if one of them is not full yet. **Better strategy can be implemented**, like *Rarest-Piece-First*, But i noticed that most of the torrent download process is in front of seeders, so i thought it will be useless right now. But of course in communicating with actual peers (like in a new torrent file that just explode over the internet), smarter strategies can help.
 * After all pieces have been received, if the torrent file contain folders we create them and rewrite them in the correct order. until then, all files are written to temp file.
 ### Charted flow of the program:
 ![Program Flow](https://i.imgur.com/yuf03AS.png)

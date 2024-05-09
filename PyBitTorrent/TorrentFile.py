@@ -4,6 +4,7 @@ from copy import deepcopy
 
 import rich
 from PyBitTorrent.bcoder import bencode, bdecode
+from PyBitTorrent.Exceptions import KeyNotFound
 
 
 class TorrentFile:
@@ -22,17 +23,18 @@ class TorrentFile:
         self.config = bdecode(torrent_data)
         self.info = self.config["info"]
         self.hash = hashlib.sha1(bencode(self.info)).digest()
-        self.piece_size = self.config["info"]["piece length"]
-        self.file_name = self.config["info"]["name"]
         self.length = 0
         self.print_configuration()
+
+        for key in [["name", "file_name"], ["piece length", "piece_size"]]:
+            self._set_attribute_from_info(*key)
 
         # Calculate the total length
         if "files" in self.info.keys():
             for file in self.info["files"]:
                 self.length += file["length"]
         else:
-            self.length = self.info["length"]
+            self._set_attribute_from_info("length", "length")
 
     def print_configuration(self):
         """
@@ -43,3 +45,15 @@ class TorrentFile:
 
         config["info"]["pieces"] = ""
         rich.print(config)
+
+    def _set_attribute_from_info(self, key, self_key) :
+        """
+        Set value from info dict to self if exists
+        else get the value from config
+        """
+        if key in self.info.keys() :
+            self.__dict__[self_key] = self.info[key]
+        elif key in self.config.keys() :
+            self.__dict__[self_key] = self.config[key]
+        else :
+            raise KeyNotFound
